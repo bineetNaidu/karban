@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { Karban } from '../types';
 
 //? mock overlook
-const data: Karban[] | [] = [];
+let data: Karban | undefined = undefined;
 
 const KarbanStore = writable(data);
 
