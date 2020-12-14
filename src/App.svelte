@@ -5,6 +5,7 @@
 	import Modal from "./Modal.svelte";
 	import Signin from "./createKarbanCard.svelte";
 	import KarbanStore from "./store/KarbanStore";
+	import KarbanSurface from "./KarbanSurface.svelte";
 
 	// States
 	let showModal: boolean = true;
@@ -32,4 +33,7 @@
 	<Modal {showModal}>
 		<Signin />
 	</Modal>
+	{#if !showModal}
+		<KarbanSurface />
+	{/if}
 </main>
