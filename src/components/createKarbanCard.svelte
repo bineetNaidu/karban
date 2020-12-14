@@ -1,7 +1,7 @@
 <script lang="ts">
-  import axios from "./axios";
-  import KarbanStore from "./store/KarbanStore";
-  import type { Karban } from "./types";
+  import axios from "../axios";
+  import KarbanStore from "../store/KarbanStore";
+  import type { Karban } from "../types";
 
   let username: string = "";
   let passcode: string = "";

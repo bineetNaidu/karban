@@ -1,5 +1,5 @@
 <script lang="ts">
- import Header from "./Header.svelte";
+ import Header from "./components/Header.svelte";
  import KarbanProjects from "./components/KarbanProjects.svelte";
  import KarbanStore from "./store/KarbanStore";
 </script>
