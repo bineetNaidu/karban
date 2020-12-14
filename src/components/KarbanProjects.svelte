@@ -1,8 +1,18 @@
 <script lang="ts">
   import ProjectCard from "./ProjectCard.svelte";
   import type { KarbanProjects } from "../types";
+  import Modal from "./Modal.svelte";
+  import NewKarbanProjectForm from "./NewKarbanProjectForm.svelte";
   export let projects: KarbanProjects[];
+
+  let showNewProjectForm: boolean = false;
 </script>
+
+<Modal
+  showModal={showNewProjectForm}
+  on:click={() => (showNewProjectForm = false)}>
+  <NewKarbanProjectForm on:click={() => (showNewProjectForm = false)} />
+</Modal>
 
 <section
   class="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4">
@@ -43,15 +53,15 @@
   <ul
     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
     {#each projects as project}
-      <ProjectCard />
+      <ProjectCard {project} />
     {/each}
 
     <li class="hover:shadow-lg flex rounded-lg">
-      <a
-        href="/new"
+      <button
+        on:click={() => (showNewProjectForm = true)}
         class="hover:border-transparent hover:shadow-xs w-full flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
-        New Project
-      </a>
+        Add New Project
+      </button>
     </li>
   </ul>
 </section>
