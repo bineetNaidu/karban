@@ -1,4 +1,5 @@
 <script>
+	export let segment;
 </script>
 
 <main>
