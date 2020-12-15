@@ -19,6 +19,7 @@
   <header class="flex items-center justify-between">
     <h2 class="text-lg leading-6 font-medium text-black">Projects</h2>
     <button
+      on:click={() => (showNewProjectForm = true)}
       class="hover:bg-light-blue-200 hover:text-light-blue-800 group flex items-center rounded-md bg-light-blue-100 text-light-blue-600 text-sm font-medium px-4 py-2">
       <svg
         class="group-hover:text-light-blue-600 text-light-blue-500 mr-2"

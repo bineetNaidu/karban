@@ -1,56 +1,84 @@
 <script lang="ts">
+ import axios from "../utils/axios";
  import KarbanStore from "../store/KarbanStore";
  import type { Karban } from "../types";
- import axios from "../utils/axios";
-
- export const id: string = $KarbanStore._id;
-
- let projectName: string = "";
- let projectDescription: string = "";
-
- const createNewKarbanProject = async () => {
-  if (projectName && projectDescription) {
-   const { data } = await axios.post(`/${id}/project`, {
-    projectName,
-    projectDescription,
+ let username: string = "";
+ let passcode: string = "";
+ const findKarbanHandler = async () => {
+  if (username && passcode) {
+   const { data } = await axios.post("/", {
+    username,
+    passcode,
    });
    const karban: Karban = data.karban;
-   KarbanStore.update(() => karban);
+   if (!localStorage.getItem("karbanId")) {
+    localStorage.setItem("karbanId", karban._id);
+   } else {
+    localStorage.setItem("karbanId", karban._id);
+   }
+   KarbanStore.set(karban);
   } else {
    alert("Please Fill out the field");
   }
  };
 </script>
 
-{#if id !== ''}
- <form
-  class="mt-8 space-y-6 relative"
-  on:submit|preventDefault={createNewKarbanProject}>
-  <button
-   on:click
-   class="absolute -top-10 -right-10 bg-red-500 px-2 py-1 text-white">X</button>
+<svelte:head>
+ <title>Create Karban Account</title>
+</svelte:head>
+
+<section class="container mx-auto lg:px-96 md:px-40 my-16">
+ <div>
+  <img
+   class="mx-auto h-12 w-auto"
+   src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+   alt="Workflow" />
   <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-   Create new Project
+   Find Your Karban account
   </h2>
+ </div>
+ <form class="mt-8 space-y-6" on:submit|preventDefault={findKarbanHandler}>
   <div class="rounded-md shadow-sm -space-y-px">
    <div>
-    <label for="projectName" class="sr-only">ProjectName</label>
+    <label for="username" class="sr-only">Username</label>
     <input
-     bind:value={projectName}
+     id="username"
+     bind:value={username}
      required
      class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-     placeholder="ProjectName" />
+     placeholder="Username" />
    </div>
    <div>
-    <label for="projectDescription" class="sr-only">ProjectDescription</label>
+    <label for="password" class="sr-only">Passcode</label>
     <input
-     type="text"
-     bind:value={projectDescription}
+     id="password"
+     type="password"
+     bind:value={passcode}
      required
      class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-     placeholder="ProjectDescription" />
+     placeholder="Passcode" />
    </div>
   </div>
+
+  <div class="flex items-center justify-between">
+   <div class="flex items-center">
+    <input
+     id="remember_me"
+     name="remember_me"
+     type="checkbox"
+     class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+    <label for="remember_me" class="ml-2 block text-sm text-gray-900">
+     Remember me
+    </label>
+   </div>
+
+   <div class="text-sm">
+    <a href="/forgot" class="font-medium text-indigo-600 hover:text-indigo-500">
+     Forgot your passcode?
+    </a>
+   </div>
+  </div>
+
   <div>
    <button
     type="submit"
@@ -69,10 +97,8 @@
        clip-rule="evenodd" />
      </svg>
     </span>
-    Create Project
+    Find!
    </button>
   </div>
  </form>
-{:else}
- <h1>Please Provide an ID</h1>
-{/if}
+</section>
