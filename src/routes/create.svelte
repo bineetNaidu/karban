@@ -27,10 +27,6 @@
   };
 </script>
 
-<svelte:head>
-  <title>Create Karban Account</title>
-</svelte:head>
-
 <section class="container mx-auto lg:px-96 md:px-40 my-16">
   <div>
     <img
