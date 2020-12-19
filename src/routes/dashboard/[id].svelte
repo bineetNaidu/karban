@@ -14,6 +14,7 @@
   import Navbar from "../../components/Navbar.svelte";
   import Modal from "../../components/Modal.svelte";
   import NewKarbanTabForm from "../../components/NewKarbanTabForm.svelte";
+  import axios from "../../utils/axios";
 
   export let id;
 
@@ -32,6 +33,17 @@
   const updateTabs = (updateddata: KarbanProjects) => {
     data = updateddata;
     showNewProjectTabForm = false;
+  };
+  const deleteTab = async (tabId: string) => {
+    const res = await axios.delete(
+      `/${$KarbanStore._id}/project/${id}/tab/${tabId}`
+    );
+    if (!res.data.success) {
+      alert(res.data.errors);
+    }
+    const removedTabList = data.tabs.filter((t) => t.tabId !== tabId);
+    console.log(...removedTabList);
+    data.tabs = removedTabList;
   };
 </script>
 
@@ -70,7 +82,7 @@
   {#if data}
     <div class="grid grid-cols-4 gap-4">
       {#each data.tabs as tab (tab.tabId)}
-        <TabCard {tab} />
+        <TabCard {tab} {deleteTab} />
       {/each}
     </div>
   {/if}
