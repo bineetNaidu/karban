@@ -1,15 +1,34 @@
 <script lang="ts">
   import type { KarbanProjectTab } from "../types";
+  import axios from "../utils/axios";
   import CardTabSurface from "./CardTabSurface.svelte";
   import Modal from "./Modal.svelte";
   import NewProjectCardForm from "./NewProjectCardForm.svelte";
 
   export let tab: KarbanProjectTab;
   export let deleteTab: (tabId: string) => Promise<void>;
-  export let addTabCard: (tabId: string, cardBody: string) => Promise<void>;
+  export let projectId: string;
+  export let id: string;
 
   let isOpen: boolean = false;
   let showForm: boolean = false;
+
+  const addTabCard = async (tabId: string, cardBody: string) => {
+    const res = await axios.post(`/${id}/project/${projectId}/tab/${tabId}`, {
+      cardBody,
+    });
+    if (res.data.errors) {
+      alert(res.data.errors);
+    }
+    const proj = res.data.karban.projects.find(
+      (p) => p.projectId === projectId
+    );
+    const latest = proj.tabs.find((t) => t.tabId === tabId).cards;
+    tab.cards = latest;
+
+    isOpen = false;
+    showForm = false;
+  };
 </script>
 
 <Modal showModal={showForm}>

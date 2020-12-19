@@ -43,16 +43,6 @@
     const removedTabList = data.tabs.filter((t) => t.tabId !== tabId);
     data.tabs = removedTabList;
   };
-  const addTabCard = async (tabId: string, cardBody: string) => {
-    const res = await axios.post(
-      `/${$KarbanStore._id}/project/${id}/tab/${tabId}`,
-      { cardBody }
-    );
-    if (res.data.errors) {
-      alert(res.data.errors);
-    }
-    KarbanStore.update(() => res.data.karban);
-  };
 </script>
 
 <Navbar username={$KarbanStore.username} />
@@ -92,7 +82,7 @@
   {#if data}
     <div class="grid grid-cols-4 gap-4">
       {#each data.tabs as tab (tab.tabId)}
-        <TabCard {tab} {deleteTab} {addTabCard} />
+        <TabCard {tab} {deleteTab} id={$KarbanStore._id} projectId={id} />
       {/each}
     </div>
   {/if}
