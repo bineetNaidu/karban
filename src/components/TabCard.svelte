@@ -1,11 +1,22 @@
 <script lang="ts">
  import type { KarbanProjectTab } from "../types";
+ import Modal from "./Modal.svelte";
+ import NewProjectCardForm from "./NewProjectCardForm.svelte";
 
  export let tab: KarbanProjectTab;
  export let deleteTab: (tabId: string) => Promise<void>;
+ export let addTabCard: (tabId: string, cardBody: string) => Promise<void>;
 
  let isOpen: boolean = false;
+ let showForm: boolean = false;
 </script>
+
+<Modal showModal={showForm}>
+ <NewProjectCardForm
+  on:click={() => (showForm = !showForm)}
+  tabId={tab.tabId}
+  {addTabCard} />
+</Modal>
 
 <div class="bg-gray-200 rounded-xl p-6 w-72 min-h-screen h-full">
  <header class="flex flex-row justify-between items-center">
@@ -47,6 +58,14 @@
        "
        role="menuitem">Edit</button>
      </div>
+     <div class="py-1">
+      <button
+       on:click={() => (showForm = !showForm)}
+       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full
+       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500
+       "
+       role="menuitem">Add</button>
+     </div>
 
      <div class="py-1">
       <button
@@ -60,4 +79,12 @@
    {/if}
   </div>
  </header>
+
+ <section>
+  {#each tab.cards as card (card.cardId)}
+   <div>
+    <h1>{card.cardBody}</h1>
+   </div>
+  {/each}
+ </section>
 </div>

@@ -27,7 +27,6 @@
     }
 
     data = $KarbanStore.projects.find((p) => p.projectId === id);
-    console.log(data);
   });
 
   const updateTabs = (updateddata: KarbanProjects) => {
@@ -38,12 +37,21 @@
     const res = await axios.delete(
       `/${$KarbanStore._id}/project/${id}/tab/${tabId}`
     );
-    if (!res.data.success) {
+    if (res.data.errors) {
       alert(res.data.errors);
     }
     const removedTabList = data.tabs.filter((t) => t.tabId !== tabId);
-    console.log(...removedTabList);
     data.tabs = removedTabList;
+  };
+  const addTabCard = async (tabId: string, cardBody: string) => {
+    const res = await axios.post(
+      `/${$KarbanStore._id}/project/${id}/tab/${tabId}`,
+      { cardBody }
+    );
+    if (res.data.errors) {
+      alert(res.data.errors);
+    }
+    KarbanStore.update(() => res.data.karban);
   };
 </script>
 
@@ -62,7 +70,9 @@
 <section
   class="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4">
   <header class="flex items-center justify-between">
-    <h2 class="text-lg leading-6 font-medium text-black">Projects</h2>
+    <h2 class="text-lg leading-6 font-medium text-black">
+      {data ? data.projectName : 'loading...'}
+    </h2>
     <button
       on:click={() => (showNewProjectTabForm = true)}
       class="hover:bg-light-blue-200 hover:text-light-blue-800 group flex items-center rounded-md bg-light-blue-100 text-light-blue-600 text-sm font-medium px-4 py-2">
@@ -82,7 +92,7 @@
   {#if data}
     <div class="grid grid-cols-4 gap-4">
       {#each data.tabs as tab (tab.tabId)}
-        <TabCard {tab} {deleteTab} />
+        <TabCard {tab} {deleteTab} {addTabCard} />
       {/each}
     </div>
   {/if}
