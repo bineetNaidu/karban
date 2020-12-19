@@ -29,6 +29,17 @@
     isOpen = false;
     showForm = false;
   };
+
+  const deleteCard = async (cardId: string) => {
+    const { data } = await axios.delete(
+      `/${id}/project/${projectId}/tab/${tab.tabId}/card/${cardId}`
+    );
+    if (data.errors) {
+      alert(data.errors);
+    }
+    const filteredCards = tab.cards.filter((c) => c.cardId !== cardId);
+    tab.cards = filteredCards;
+  };
 </script>
 
 <Modal showModal={showForm}>
@@ -103,7 +114,7 @@
   {#if tab.cards !== []}
     <section class="pt-4 flex flex-col">
       {#each tab.cards as card (card.cardId)}
-        <CardTabSurface {card} />
+        <CardTabSurface {card} {deleteCard} />
       {/each}
     </section>
   {/if}
