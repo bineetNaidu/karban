@@ -18,7 +18,7 @@
       on:click
       class="absolute -top-10 -right-10 bg-red-500 px-2 py-1 text-white">X</button>
     <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-      Create new Project
+      Create new Card
     </h2>
     <div class="rounded-md shadow-sm -space-y-px">
       <div>
@@ -48,7 +48,7 @@
               clip-rule="evenodd" />
           </svg>
         </span>
-        Create Project Tab Card
+        Create Card
       </button>
     </div>
   </form>

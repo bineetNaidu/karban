@@ -78,15 +78,17 @@
 
       {#if isOpen}
         <div
-          class="origin-top-right absolute right-0 mt-2 w-24 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
+          class="origin-top-right absolute right-0 mt-2 w-24 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-10"
           role="menu"
           aria-orientation="vertical"
+          on:mouseleave={() => (isOpen = false)}
           aria-labelledby="options-menu">
           <div class="py-1">
             <button
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full
         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500
         "
+              disabled
               role="menuitem">Edit</button>
           </div>
           <div class="py-1">
