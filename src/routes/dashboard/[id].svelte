@@ -15,10 +15,12 @@
   import Modal from "../../components/Modal.svelte";
   import NewKarbanTabForm from "../../components/NewKarbanTabForm.svelte";
   import axios from "../../utils/axios";
+  import DeleteProject from "../../components/DeleteProject.svelte";
 
   export let id;
 
   let showNewProjectTabForm = false;
+  let showDeleteProjectModal: boolean = false;
 
   let data: KarbanProjects;
   onMount(async () => {
@@ -57,6 +59,8 @@
     {updateTabs} />
 </Modal>
 
+<DeleteProject {showDeleteProjectModal} projectId={id} />
+
 <section
   class="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4">
   <header class="flex items-center justify-between">
@@ -64,19 +68,9 @@
       {data ? data.projectName : 'loading...'}
     </h2>
     <button
-      on:click={() => (showNewProjectTabForm = true)}
-      class="hover:bg-light-blue-200 hover:text-light-blue-800 group flex items-center rounded-md bg-light-blue-100 text-light-blue-600 text-sm font-medium px-4 py-2">
-      <svg
-        class="group-hover:text-light-blue-600 text-light-blue-500 mr-2"
-        width="12"
-        height="20"
-        fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M6 5a1 1 0 011 1v3h3a1 1 0 110 2H7v3a1 1 0 11-2 0v-3H2a1 1 0 110-2h3V6a1 1 0 011-1z" />
-      </svg>
-      New
+      on:click={() => (showDeleteProjectModal = !showDeleteProjectModal)}
+      class="hover:bg-light-blue-200 group flex items-center rounded-md bg-red-600 text-sm font-medium px-4 py-2 text-white">
+      Delete this Project
     </button>
   </header>
   {#if data}
@@ -84,6 +78,14 @@
       {#each data.tabs as tab (tab.tabId)}
         <TabCard {tab} {deleteTab} id={$KarbanStore._id} projectId={id} />
       {/each}
+      <div
+        class="hover:shadow-lg flex  rounded-xl p-6 w-72 min-h-screen h-full">
+        <button
+          on:click={() => (showNewProjectTabForm = true)}
+          class="hover:border-transparent hover:bg-gray-200 hover:shadow-xs w-full flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 text-sm font-medium py-4 focus:outline-none">
+          Add New Tab
+        </button>
+      </div>
     </div>
   {/if}
 </section>
