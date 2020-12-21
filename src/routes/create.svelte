@@ -1,28 +1,31 @@
 <script lang="ts">
-  import { goto } from "@sapper/app";
-  import axios from "../utils/axios";
-  import KarbanStore from "../store/KarbanStore";
-  import type { Karban } from "../types";
+  import { goto } from '@sapper/app';
+  import axios from '../utils/axios';
+  import KarbanStore from '../store/KarbanStore';
+  import type { Karban } from '../types';
 
-  let username: string = "";
-  let passcode: string = "";
+  let username: string = '';
+  let passcode: string = '';
+  let remember: boolean = false;
 
   const createKarbanApiHandler = async () => {
     if (username && passcode) {
-      const { data } = await axios.post("/", {
+      const { data } = await axios.post('/', {
         username,
         passcode,
       });
       const karban: Karban = data.karban;
-      if (!localStorage.getItem("karbanId")) {
-        localStorage.setItem("karbanId", karban._id);
-      } else {
-        localStorage.setItem("karbanId", karban._id);
+      if (remember) {
+        if (!localStorage.getItem('karbanId')) {
+          localStorage.setItem('karbanId', karban._id);
+        } else {
+          localStorage.setItem('karbanId', karban._id);
+        }
       }
       KarbanStore.set(karban);
-      goto("dashboard");
+      goto('dashboard');
     } else {
-      alert("Please Fill out the field");
+      alert('Please Fill out the field');
     }
   };
 </script>
@@ -45,7 +48,6 @@
       <div>
         <label for="username" class="sr-only">Username</label>
         <input
-          id="username"
           bind:value={username}
           required
           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -69,6 +71,7 @@
           id="remember_me"
           name="remember_me"
           type="checkbox"
+          bind:checked={remember}
           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
         <label for="remember_me" class="ml-2 block text-sm text-gray-900">
           Remember me

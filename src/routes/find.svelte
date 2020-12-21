@@ -1,24 +1,28 @@
 <script lang="ts">
-  import axios from "../utils/axios";
-  import KarbanStore from "../store/KarbanStore";
-  import type { Karban } from "../types";
-  let username: string = "";
-  let passcode: string = "";
+  import axios from '../utils/axios';
+  import KarbanStore from '../store/KarbanStore';
+  import type { Karban } from '../types';
+
+  let username: string = '';
+  let passcode: string = '';
+  let remember: boolean = false;
+
   const findKarbanHandler = async () => {
     if (username && passcode) {
-      const { data } = await axios.post("/", {
-        username,
+      const { data } = await axios.post(`/find?username=${username}`, {
         passcode,
       });
       const karban: Karban = data.karban;
-      if (!localStorage.getItem("karbanId")) {
-        localStorage.setItem("karbanId", karban._id);
-      } else {
-        localStorage.setItem("karbanId", karban._id);
+      if (remember) {
+        if (!localStorage.getItem('karbanId')) {
+          localStorage.setItem('karbanId', karban._id);
+        } else {
+          localStorage.setItem('karbanId', karban._id);
+        }
       }
       KarbanStore.set(karban);
     } else {
-      alert("Please Fill out the field");
+      alert('Please Fill out the field');
     }
   };
 </script>
@@ -30,7 +34,7 @@
       src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
       alt="Workflow" />
     <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-      Find Your Karban account
+      Log in to Your Karban account
     </h2>
   </div>
   <form class="mt-8 space-y-6" on:submit|preventDefault={findKarbanHandler}>
@@ -38,7 +42,6 @@
       <div>
         <label for="username" class="sr-only">Username</label>
         <input
-          id="username"
           bind:value={username}
           required
           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -61,6 +64,7 @@
         <input
           id="remember_me"
           name="remember_me"
+          bind:checked={remember}
           type="checkbox"
           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
         <label for="remember_me" class="ml-2 block text-sm text-gray-900">
@@ -95,7 +99,7 @@
               clip-rule="evenodd" />
           </svg>
         </span>
-        Find!
+        Log in!
       </button>
     </div>
   </form>
