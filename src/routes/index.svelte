@@ -1,5 +1,15 @@
 <script lang="ts">
+  import KarbanStore from '../store/KarbanStore';
+
   let showNavModal: boolean = false;
+
+  KarbanStore.subscribe((data) => {
+    if (data) {
+      console.log('STATUS:OK');
+    } else {
+      console.log('STATUS:NOT_OK');
+    }
+  });
 </script>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
