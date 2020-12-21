@@ -23,7 +23,7 @@
         }
       }
       KarbanStore.set(karban);
-      goto('dashboard');
+      goto('/dashboard');
     } else {
       alert('Please Fill out the field');
     }

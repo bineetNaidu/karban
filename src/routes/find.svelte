@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '@sapper/app';
   import axios from '../utils/axios';
   import KarbanStore from '../store/KarbanStore';
   import type { Karban } from '../types';
@@ -21,6 +22,7 @@
         }
       }
       KarbanStore.set(karban);
+      goto('/dashboard');
     } else {
       alert('Please Fill out the field');
     }
