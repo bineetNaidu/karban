@@ -80,9 +80,9 @@
 
       <div class="text-sm">
         <a
-          href="/forgot"
+          href="/find"
           class="font-medium text-indigo-600 hover:text-indigo-500">
-          Forgot your passcode?
+          Already have an Account?
         </a>
       </div>
     </div>
