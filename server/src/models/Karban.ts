@@ -1,47 +1,33 @@
 import mongoose from 'mongoose';
-import {
-  KarbanDocs,
-  KarbanProjectTab,
-  KarbanProjectTabCard,
-  KarbanProjects,
-  KarbanModel,
-} from './utils/types';
+import { KarbanDocs, KarbanModel } from './utils/types';
 import { StringAndRequired, StringAndRequiredAndUnique } from './utils';
-const Schema = mongoose.Schema;
 
-const KarbanSchema = new Schema(
-  {
-    username: StringAndRequiredAndUnique,
-    passcode: StringAndRequired,
-    projects: [
-      {
-        _id: false,
-        projectId: StringAndRequiredAndUnique,
-        projectName: StringAndRequired,
-        projectDescription: String,
-        tabs: [
-          {
-            _id: false,
-            tabId: StringAndRequiredAndUnique,
-            tabName: StringAndRequired,
-            cards: [
-              {
-                _id: false,
-                cardId: StringAndRequiredAndUnique,
-                cardBody: String,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    toJSON: {
-      versionKey: false,
+const KarbanSchema = new mongoose.Schema({
+  username: StringAndRequiredAndUnique,
+  passcode: StringAndRequired,
+  projects: [
+    {
+      _id: false,
+      projectId: StringAndRequiredAndUnique,
+      projectName: StringAndRequired,
+      projectDescription: String,
+      tabs: [
+        {
+          _id: false,
+          tabId: StringAndRequiredAndUnique,
+          tabName: StringAndRequired,
+          cards: [
+            {
+              _id: false,
+              cardId: StringAndRequiredAndUnique,
+              cardBody: String,
+            },
+          ],
+        },
+      ],
     },
-  }
-);
+  ],
+});
 
 //? To build a new Karban
 KarbanSchema.statics.build = (passcode: string, username: string) => {
@@ -98,6 +84,10 @@ KarbanSchema.statics.buildProjectTabCard = async (
   return karban;
 };
 
-const Karban = mongoose.model<KarbanDocs, KarbanModel>('Karban', KarbanSchema);
+// TODO : Fix the typeof KarbanSchema of any !! < ((KarbanSchema as any)) >
+const Karban = mongoose.model<KarbanDocs, KarbanModel>(
+  'Karban',
+  KarbanSchema as any
+);
 
 export default Karban;
