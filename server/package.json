@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "start": "node ./build/app",
-    "dev": "nodemon ./src/app"
+    "dev": "nodemon ./src/app",
+    "build": "tsc"
   },
   "dependencies": {
     "cors": "^2.8.5",
