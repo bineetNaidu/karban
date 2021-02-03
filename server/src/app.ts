@@ -7,10 +7,9 @@ import connectDB from './config/db';
 import dotenv from 'dotenv';
 import NotFoundError from './utils/NotFoundError';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
+import { graphqlHTTP } from 'express-graphql';
+import schema from './schema';
 import 'express-async-errors';
-
-//* Routers
-import karbanRoutes from './routes';
 
 // ***** App Config *****
 if (process.env.NODE_ENV !== 'production') {
@@ -24,10 +23,16 @@ connectDB();
 app.use(express.json());
 app.use(logger('dev'));
 app.use(cors());
-app.use(helmet());
+// TODO: Fix Helmet permission issue on GraphiQL
+// app.use(helmet());
 
-// ***** Unmount Routes *****
-app.use('/api/', karbanRoutes);
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  })
+);
 
 //! Not found page error
 app.all('*', () => {
@@ -39,6 +44,6 @@ app.use(ExpressErrorHandler);
 // **** Listeners ****
 app.listen(process.env.PORT || 4242, () => {
   console.log('-----------------------------------------');
-  console.log('>>>>>>> API SERVER HAS STARTED <<<<<<<<');
+  console.log('>>>>>>> KARBAN SERVER HAS STARTED <<<<<<<<');
   console.log('-----------------------------------------');
 });
