@@ -54,5 +54,3 @@ KarbanSchema.statics.build = (data: {
 const Karban = mongoose.model<KarbanDoc, KarbanModel>('Karban', KarbanSchema);
 
 export default Karban;
-
-Karban.build;

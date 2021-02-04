@@ -54,6 +54,9 @@ KarbanProjectSchema.statics.build = (data: {
   return new KarbanProject(data);
 };
 
-const KarbanProject = mongoose.model('KarbanProject', KarbanProjectSchema);
+const KarbanProject = mongoose.model<KarbanProjectDoc, KarbanProjectModel>(
+  'KarbanProject',
+  KarbanProjectSchema
+);
 
 export default KarbanProject;
