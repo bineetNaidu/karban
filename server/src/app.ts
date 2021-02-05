@@ -2,7 +2,6 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import logger from 'morgan';
 import connectDB from './config/db';
 import dotenv from 'dotenv';
 import NotFoundError from './utils/NotFoundError';
@@ -18,8 +17,6 @@ const app = express();
 connectDB();
 
 // ***** Middlewares *****
-app.use(express.json());
-app.use(logger('dev'));
 app.use(cors());
 // TODO: Fix Helmet permission issue on GraphiQL
 // app.use(helmet());
