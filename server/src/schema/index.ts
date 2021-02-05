@@ -10,6 +10,8 @@ import {
 } from 'graphql';
 import Karban from '../models/Karban';
 import KarbanProject from '../models/KarbanProject';
+import KarbanProjectTab from '../models/KarbanProjectTab';
+import { v4 as uuid } from 'uuid';
 
 const KarbanProjectTabCardType = new GraphQLObjectType({
   name: 'KarbanProjectTabCard',
@@ -27,11 +29,13 @@ const KarbanProjectTabType = new GraphQLObjectType({
     cards: {
       type: new GraphQLList(KarbanProjectTabCardType),
       resolve: async (parent, args) => {
-        const karbanProject = await KarbanProject.findOne({ _id: parent._id });
+        const karbanProject = await KarbanProject.findOne({
+          _id: parent._id,
+        }).populate('tabs');
         if (!karbanProject) {
           throw new GraphQLError('Karban Project Not Found');
         }
-        const cards = karbanProject.tabs.map((t) => t.cards);
+        const cards = karbanProject.tabs.map((t: any) => t.cards);
         return cards;
       },
     },
@@ -47,7 +51,9 @@ const KarbanProjectType = new GraphQLObjectType({
     tabs: {
       type: new GraphQLList(KarbanProjectTabType),
       resolve: async (parent, args) => {
-        const karbanProject = await KarbanProject.findOne({ _id: parent._id });
+        const karbanProject = await KarbanProject.findOne({
+          _id: parent._id,
+        }).populate('tabs');
         if (!karbanProject) {
           throw new GraphQLError('Karban Project Not Found');
         }
@@ -155,6 +161,32 @@ const Mutation = new GraphQLObjectType({
         await karban.save();
 
         return karbanProject;
+      },
+    },
+
+    createTab: {
+      type: KarbanProjectTabType,
+      args: {
+        karbanProjectId: { type: new GraphQLNonNull(GraphQLID) },
+        tabName: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        const karbanProject = await KarbanProject.findOne({
+          _id: args.karbanProjectId,
+        });
+        if (!karbanProject) {
+          throw new GraphQLError('The Karban Project Does not Exist!');
+        }
+        const tab = KarbanProjectTab.build({
+          tabId: uuid(),
+          tabName: args.tabName,
+        });
+        await tab.save();
+
+        karbanProject.tabs.push(tab._id);
+        await karbanProject.save();
+
+        return tab;
       },
     },
   },
