@@ -29,14 +29,11 @@ const KarbanProjectTabType = new GraphQLObjectType({
     cards: {
       type: new GraphQLList(KarbanProjectTabCardType),
       resolve: async (parent, args) => {
-        const karbanProject = await KarbanProject.findOne({
-          _id: parent._id,
-        }).populate('tabs');
-        if (!karbanProject) {
-          throw new GraphQLError('Karban Project Not Found');
+        const tab = await KarbanProjectTab.findOne({ tabId: parent.tabId });
+        if (!tab) {
+          throw new GraphQLError('Karban Project Tab Not Found');
         }
-        const cards = karbanProject.tabs.map((t: any) => t.cards);
-        return cards;
+        return tab.cards;
       },
     },
   }),
@@ -187,6 +184,29 @@ const Mutation = new GraphQLObjectType({
         await karbanProject.save();
 
         return tab;
+      },
+    },
+
+    createCard: {
+      type: KarbanProjectTabCardType,
+      args: {
+        tabId: { type: new GraphQLNonNull(GraphQLString) },
+        cardBody: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        try {
+          const cardId = uuid();
+          const cards = await KarbanProjectTab.buildCard(args.tabId, {
+            cardBody: args.cardBody,
+            cardId,
+          });
+
+          const card = cards.filter((c) => c.cardId === cardId);
+
+          return card[0];
+        } catch (e) {
+          throw new GraphQLError(e.message);
+        }
       },
     },
   },

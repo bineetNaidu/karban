@@ -49,7 +49,7 @@ TabSchema.statics.buildCard = async function (
     cardBody: string;
   }
 ) {
-  const karbanProjectTab = await this.findById(tabId);
+  const karbanProjectTab = await this.findOne({ tabId });
   if (!karbanProjectTab) {
     throw new Error('Tab Not Found');
   }
