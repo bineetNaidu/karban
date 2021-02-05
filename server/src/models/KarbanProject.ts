@@ -1,21 +1,10 @@
 import mongoose from 'mongoose';
 import { StringAndRequired, StringAndRequiredAndUnique } from './utils';
 
-type Card = {
-  cardId: string;
-  cardBody?: string;
-};
-
-type Tab = {
-  tabId: string;
-  tabName: string;
-  cards: Card[];
-};
-
 interface KarbanProjectDoc extends mongoose.Document {
   projectName: string;
   projectDescription?: string;
-  tabs: Tab[];
+  tabs: string[];
 }
 
 interface KarbanProjectModel extends mongoose.Model<KarbanProjectDoc> {
@@ -33,16 +22,8 @@ const KarbanProjectSchema = new mongoose.Schema<
   projectDescription: String,
   tabs: [
     {
-      _id: false,
-      tabId: StringAndRequiredAndUnique,
-      tabName: StringAndRequired,
-      cards: [
-        {
-          _id: false,
-          cardId: StringAndRequiredAndUnique,
-          cardBody: String,
-        },
-      ],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'KarbanProjectTab',
     },
   ],
 });
