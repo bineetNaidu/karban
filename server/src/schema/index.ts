@@ -70,6 +70,7 @@ const KarbanType = new GraphQLObjectType({
       type: new GraphQLList(KarbanProjectType),
       resolve: async (parent, args) => {
         const karban = await Karban.findById(parent._id).populate('projects');
+        return karban?.projects;
       },
     },
   }),
@@ -83,6 +84,25 @@ const RootQuery = new GraphQLObjectType({
       async resolve() {
         const karbans = await Karban.find({}).populate('projects').exec();
         return karbans;
+      },
+    },
+
+    loginToKarban: {
+      type: KarbanType,
+      args: {
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        const karban = await Karban.findOne({
+          username: args.username,
+          password: args.password,
+        }).populate('projects');
+        // .exec();
+        if (!karban) {
+          throw new GraphQLError('The Karban User Does not Exist!');
+        }
+        return karban;
       },
     },
   },
@@ -108,6 +128,33 @@ const Mutation = new GraphQLObjectType({
         });
         await karban.save();
         return karban;
+      },
+    },
+
+    createProject: {
+      type: KarbanProjectType,
+      args: {
+        karbanId: { type: new GraphQLNonNull(GraphQLID) },
+        projectName: { type: new GraphQLNonNull(GraphQLString) },
+        projectDescription: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        const karban = await Karban.findOne({
+          _id: args.karbanId,
+        });
+        if (!karban) {
+          throw new GraphQLError('The Karban User Does not Exist!');
+        }
+        const karbanProject = KarbanProject.build({
+          projectName: args.projectName,
+          projectDescription: args.projectDescription,
+        });
+        await karbanProject.save();
+
+        karban.projects.push(karbanProject._id);
+        await karban.save();
+
+        return karbanProject;
       },
     },
   },
