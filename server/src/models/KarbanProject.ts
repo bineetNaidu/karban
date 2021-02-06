@@ -31,7 +31,7 @@ const KarbanProjectSchema = new mongoose.Schema<
 
 KarbanProjectSchema.pre('remove', async function () {
   await KarbanProjectTab.remove({
-    tabId: {
+    _id: {
       $in: this.tabs,
     },
   });

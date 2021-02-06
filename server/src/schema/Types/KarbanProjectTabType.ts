@@ -3,6 +3,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLError,
+  GraphQLID,
 } from 'graphql';
 import KarbanProjectTab from '../../models/KarbanProjectTab';
 import { KarbanProjectTabCardType } from './KarbanProjectTabCardType';
@@ -10,6 +11,7 @@ import { KarbanProjectTabCardType } from './KarbanProjectTabCardType';
 export const KarbanProjectTabType = new GraphQLObjectType({
   name: 'KarbanProjectTab',
   fields: () => ({
+    _id: { type: GraphQLID },
     tabId: { type: GraphQLString },
     tabName: { type: GraphQLString },
     cards: {

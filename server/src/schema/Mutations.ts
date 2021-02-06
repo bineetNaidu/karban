@@ -87,7 +87,7 @@ export const Mutation = new GraphQLObjectType({
         });
         await tab.save();
 
-        karbanProject.tabs.push(tab.tabId);
+        karbanProject.tabs.push(tab._id);
         await karbanProject.save();
 
         return tab;
@@ -131,5 +131,58 @@ export const Mutation = new GraphQLObjectType({
         }
       },
     },
+
+    deleteProject: {
+      type: KarbanProjectType,
+      args: {
+        token: { type: new GraphQLNonNull(GraphQLString) },
+        projectId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(_, args) {
+        const { id } = jwt.decode(args.token) as { id: string };
+        await Karban.findOneAndUpdate(
+          { _id: id },
+          { $pull: { projects: args.projectId } }
+        );
+        const project = KarbanProject.findByIdAndRemove(args.projectId);
+        return project;
+      },
+    },
+    deleteProjectTab: {
+      type: KarbanProjectTabType,
+      args: {
+        token: { type: new GraphQLNonNull(GraphQLString) },
+        projectId: { type: new GraphQLNonNull(GraphQLID) },
+        tabId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(_, args) {
+        const { id } = jwt.decode(args.token) as { id: string };
+        const karban = await Karban.findOne({
+          _id: id,
+          projects: {
+            $in: args.projectId,
+          },
+        }).populate('projects');
+
+        if (!karban) {
+          throw new GraphQLError('Karban Not Found');
+        }
+
+        const foundProject = karban.projects[0];
+        if (!foundProject) {
+          throw new GraphQLError('Karban Project Not Found');
+        }
+        await KarbanProject.findByIdAndUpdate((foundProject as any)._id, {
+          $pull: {
+            tabs: args.tabId,
+          },
+        });
+        const tab = await KarbanProjectTab.findById(args.tabId);
+        await tab?.remove();
+
+        return tab;
+      },
+    },
+    // TODO: deleteProjectTabCard
   },
 });
