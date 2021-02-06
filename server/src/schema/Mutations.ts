@@ -6,6 +6,7 @@ import {
   GraphQLError,
 } from 'graphql';
 import { v4 as uuid } from 'uuid';
+import jwt from 'jsonwebtoken';
 import Karban from '../models/Karban';
 import KarbanProject from '../models/KarbanProject';
 import KarbanProjectTab from '../models/KarbanProjectTab';
@@ -13,6 +14,7 @@ import { KarbanProjectTabCardType } from './Types/KarbanProjectTabCardType';
 import { KarbanProjectTabType } from './Types/KarbanProjectTabType';
 import { KarbanProjectType } from './Types/KarbanProjectType';
 import { KarbanType } from './Types/KarbanType';
+import { createToken } from '../utils/createToken';
 
 export const Mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -33,20 +35,22 @@ export const Mutation = new GraphQLObjectType({
           username: args.username,
         });
         await karban.save();
-        return karban;
+        const token = createToken(karban._id);
+        return { token };
       },
     },
 
     createProject: {
       type: KarbanProjectType,
       args: {
-        karbanId: { type: new GraphQLNonNull(GraphQLID) },
+        token: { type: new GraphQLNonNull(GraphQLString) },
         projectName: { type: new GraphQLNonNull(GraphQLString) },
         projectDescription: { type: new GraphQLNonNull(GraphQLString) },
       },
       async resolve(_, args) {
+        const { id } = jwt.decode(args.token) as { id: string };
         const karban = await Karban.findOne({
-          _id: args.karbanId,
+          _id: id,
         });
         if (!karban) {
           throw new GraphQLError('The Karban User Does not Exist!');
