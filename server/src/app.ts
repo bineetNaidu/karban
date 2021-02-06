@@ -18,14 +18,25 @@ connectDB();
 
 // ***** Middlewares *****
 app.use(cors());
-// TODO: Fix Helmet permission issue on GraphiQL
-// app.use(helmet());
+helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: [],
+    connectSrc: ["'self'"],
+    scriptSrc: ["'unsafe-inline'", "'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    workerSrc: ["'self'", 'blob:'],
+    objectSrc: [],
+    imgSrc: ["'self'", 'blob:', 'data:'],
+    fontSrc: ["'self'"],
+  },
+});
 
 app.use(
   '/graphql',
   graphqlHTTP({
     schema,
     graphiql: true,
+    pretty: true,
   })
 );
 
