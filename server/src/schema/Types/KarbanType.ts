@@ -14,7 +14,7 @@ export const KarbanType = new GraphQLObjectType({
     username: { type: GraphQLString },
     avatar: { type: GraphQLString },
     email: { type: GraphQLString },
-    password: { type: GraphQLString },
+    // password: { type: GraphQLString },
     projects: {
       type: new GraphQLList(KarbanProjectType),
       resolve: async (parent, args) => {
