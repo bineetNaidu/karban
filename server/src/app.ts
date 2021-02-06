@@ -2,32 +2,43 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import logger from 'morgan';
 import connectDB from './config/db';
 import dotenv from 'dotenv';
 import NotFoundError from './utils/NotFoundError';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
+import { graphqlHTTP } from 'express-graphql';
+import schema from './schema';
 import 'express-async-errors';
 
-//* Routers
-import karbanRoutes from './routes';
-
 // ***** App Config *****
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
-}
+dotenv.config();
 
 const app = express();
 connectDB();
 
 // ***** Middlewares *****
-app.use(express.json());
-app.use(logger('dev'));
 app.use(cors());
-app.use(helmet());
+helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: [],
+    connectSrc: ["'self'"],
+    scriptSrc: ["'unsafe-inline'", "'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    workerSrc: ["'self'", 'blob:'],
+    objectSrc: [],
+    imgSrc: ["'self'", 'blob:', 'data:'],
+    fontSrc: ["'self'"],
+  },
+});
 
-// ***** Unmount Routes *****
-app.use('/api/', karbanRoutes);
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+    pretty: true,
+  })
+);
 
 //! Not found page error
 app.all('*', () => {
@@ -39,6 +50,6 @@ app.use(ExpressErrorHandler);
 // **** Listeners ****
 app.listen(process.env.PORT || 4242, () => {
   console.log('-----------------------------------------');
-  console.log('>>>>>>> API SERVER HAS STARTED <<<<<<<<');
+  console.log('>>>>>>> KARBAN SERVER HAS STARTED <<<<<<<<');
   console.log('-----------------------------------------');
 });
