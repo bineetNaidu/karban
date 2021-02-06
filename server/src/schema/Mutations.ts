@@ -17,7 +17,7 @@ import { KarbanType } from './Types/KarbanType';
 export const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    signUpToKarban: {
+    signUp: {
       type: KarbanType,
       args: {
         avatar: { type: GraphQLString },
@@ -83,7 +83,7 @@ export const Mutation = new GraphQLObjectType({
         });
         await tab.save();
 
-        karbanProject.tabs.push(tab._id);
+        karbanProject.tabs.push(tab.tabId);
         await karbanProject.save();
 
         return tab;
@@ -107,6 +107,21 @@ export const Mutation = new GraphQLObjectType({
           const card = cards.filter((c) => c.cardId === cardId);
 
           return card[0];
+        } catch (e) {
+          throw new GraphQLError(e.message);
+        }
+      },
+    },
+
+    deleteKarban: {
+      type: KarbanType,
+      args: {
+        karbanId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      description: 'Delete A Karban Project',
+      async resolve(_, args) {
+        try {
+          await Karban.findByIdAndRemove(args.karbanId);
         } catch (e) {
           throw new GraphQLError(e.message);
         }

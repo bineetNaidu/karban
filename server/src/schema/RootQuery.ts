@@ -6,6 +6,8 @@ import {
   GraphQLError,
 } from 'graphql';
 import Karban from '../models/Karban';
+import { createToken } from '../utils/createToken';
+import { AuthType } from './Types/AuthType';
 import { KarbanType } from './Types/KarbanType';
 
 export const RootQuery = new GraphQLObjectType({
@@ -19,22 +21,20 @@ export const RootQuery = new GraphQLObjectType({
       },
     },
 
-    loginToKarban: {
-      type: KarbanType,
+    login: {
+      type: AuthType,
       args: {
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
       },
       async resolve(_, args) {
-        const karban = await Karban.findOne({
-          username: args.username,
-          password: args.password,
-        }).populate('projects');
-        // .exec();
-        if (!karban) {
-          throw new GraphQLError('The Karban User Does not Exist!');
+        try {
+          const karbanUser = Karban.login(args.username, args.password);
+          const token = createToken(karbanUser._id);
+          return token;
+        } catch (e) {
+          throw new GraphQLError(e.message);
         }
-        return karban;
       },
     },
   },
