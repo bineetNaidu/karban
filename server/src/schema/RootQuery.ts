@@ -29,7 +29,7 @@ export const RootQuery = new GraphQLObjectType({
       },
       async resolve(_, args) {
         try {
-          const karbanUser = Karban.login(args.username, args.password);
+          const karbanUser = await Karban.login(args.username, args.password);
           const token = createToken(karbanUser._id);
           return token;
         } catch (e) {

@@ -19,7 +19,7 @@ interface KarbanModel extends mongoose.Model<KarbanDoc> {
     password: string;
   }): KarbanDoc;
 
-  login(username: string, password: string): KarbanDoc;
+  login(username: string, password: string): Promise<KarbanDoc>;
 }
 
 const KarbanSchema = new mongoose.Schema<KarbanDoc, KarbanModel>(
