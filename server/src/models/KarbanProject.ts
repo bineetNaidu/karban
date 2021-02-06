@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { StringAndRequired, StringAndRequiredAndUnique } from './utils';
+import KarbanProjectTab from './KarbanProjectTab';
+import { StringAndRequired } from './utils';
 
 interface KarbanProjectDoc extends mongoose.Document {
   projectName: string;
@@ -26,6 +27,14 @@ const KarbanProjectSchema = new mongoose.Schema<
       ref: 'KarbanProjectTab',
     },
   ],
+});
+
+KarbanProjectSchema.pre('remove', async function () {
+  await KarbanProjectTab.remove({
+    tabId: {
+      $in: this.tabs,
+    },
+  });
 });
 
 KarbanProjectSchema.statics.build = (data: {

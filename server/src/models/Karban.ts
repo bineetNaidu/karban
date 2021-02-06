@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import { StringAndRequired, StringAndRequiredAndUnique } from './utils';
+import KarbanProject from './KarbanProject';
 
 interface KarbanDoc extends mongoose.Document {
   username: string;
@@ -49,6 +50,14 @@ KarbanSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   next();
+});
+
+KarbanSchema.pre('remove', async function () {
+  await KarbanProject.remove({
+    _id: {
+      $in: this.projects,
+    },
+  });
 });
 
 KarbanSchema.statics.login = async function (
