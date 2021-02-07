@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import type { Karban } from '../types';
-import axios from '../utils/axios';
 
 //? mock overlook
 let data: Karban | undefined = undefined;

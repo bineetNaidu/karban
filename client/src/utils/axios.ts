@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 const axios = Axios.create({
-  baseURL: 'https://api-bineetnaidu-io.herokuapp.com/api/v1/karban',
+  baseURL: 'http://localhost:4242/graphql',
   responseType: 'json',
 });
 

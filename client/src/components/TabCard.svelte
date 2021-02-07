@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { KarbanProjectTab } from "../types";
-  import axios from "../utils/axios";
-  import CardTabSurface from "./CardTabSurface.svelte";
-  import Modal from "./Modal.svelte";
-  import NewProjectCardForm from "./NewProjectCardForm.svelte";
+  import type { KarbanProjectTab } from '../types';
+  import CardTabSurface from './CardTabSurface.svelte';
+  import Modal from './Modal.svelte';
+  import NewProjectCardForm from './NewProjectCardForm.svelte';
 
   export let tab: KarbanProjectTab;
   export let deleteTab: (tabId: string) => Promise<void>;
@@ -14,31 +13,30 @@
   let showForm: boolean = false;
 
   const addTabCard = async (tabId: string, cardBody: string) => {
-    const res = await axios.post(`/${id}/project/${projectId}/tab/${tabId}`, {
-      cardBody,
-    });
-    if (res.data.errors) {
-      alert(res.data.errors);
-    }
-    const proj = res.data.karban.projects.find(
-      (p) => p.projectId === projectId
-    );
-    const latest = proj.tabs.find((t) => t.tabId === tabId).cards;
-    tab.cards = latest;
-
-    isOpen = false;
-    showForm = false;
+    // const res = await axios.post(`/${id}/project/${projectId}/tab/${tabId}`, {
+    //   cardBody,
+    // });
+    // if (res.data.errors) {
+    //   alert(res.data.errors);
+    // }
+    // const proj = res.data.karban.projects.find(
+    //   (p) => p.projectId === projectId
+    // );
+    // const latest = proj.tabs.find((t) => t.tabId === tabId).cards;
+    // tab.cards = latest;
+    // isOpen = false;
+    // showForm = false;
   };
 
   const deleteCard = async (cardId: string) => {
-    const { data } = await axios.delete(
-      `/${id}/project/${projectId}/tab/${tab.tabId}/card/${cardId}`
-    );
-    if (data.errors) {
-      alert(data.errors);
-    }
-    const filteredCards = tab.cards.filter((c) => c.cardId !== cardId);
-    tab.cards = filteredCards;
+    // const { data } = await axios.delete(
+    //   `/${id}/project/${projectId}/tab/${tab.tabId}/card/${cardId}`
+    // );
+    // if (data.errors) {
+    //   alert(data.errors);
+    // }
+    // const filteredCards = tab.cards.filter((c) => c.cardId !== cardId);
+    // tab.cards = filteredCards;
   };
 </script>
 
@@ -46,7 +44,8 @@
   <NewProjectCardForm
     on:click={() => (showForm = !showForm)}
     tabId={tab.tabId}
-    {addTabCard} />
+    {addTabCard}
+  />
 </Modal>
 
 <div class="bg-gray-200 rounded-xl p-6 w-72 min-h-screen h-full">
@@ -61,17 +60,20 @@
           id="options-menu"
           on:click={() => (isOpen = !isOpen)}
           aria-haspopup="true"
-          aria-expanded="true">
+          aria-expanded="true"
+        >
           <svg
             class="-mr-1 ml-2 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path
               fill-rule="evenodd"
               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
         </button>
       </div>
@@ -82,14 +84,16 @@
           role="menu"
           aria-orientation="vertical"
           on:mouseleave={() => (isOpen = false)}
-          aria-labelledby="options-menu">
+          aria-labelledby="options-menu"
+        >
           <div class="py-1">
             <button
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full
         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500
         "
               disabled
-              role="menuitem">Edit</button>
+              role="menuitem">Edit</button
+            >
           </div>
           <div class="py-1">
             <button
@@ -97,7 +101,8 @@
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full
         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500
         "
-              role="menuitem">Add</button>
+              role="menuitem">Add</button
+            >
           </div>
 
           <div class="py-1">
@@ -106,7 +111,8 @@
               class="block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900
         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500
         "
-              role="menuitem">Delete</button>
+              role="menuitem">Delete</button
+            >
           </div>
         </div>
       {/if}

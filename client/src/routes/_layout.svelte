@@ -1,10 +1,10 @@
-<script>
-	// export let segment;
+<script lang="ts">
+  // export let segment;
 </script>
 
 <svelte:head>
-	<title>Karban | api.bineetnaidu.io</title>
+  <title>Karban | api.bineetnaidu.io</title>
 </svelte:head>
 <main>
-	<slot />
+  <slot />
 </main>
