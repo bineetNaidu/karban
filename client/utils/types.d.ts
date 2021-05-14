@@ -27,8 +27,12 @@ export interface StateContextType {
   projects: Project[] | string[] | null;
 }
 
+interface Auth extends User {
+  token: string;
+}
+
 export type ActionTypes =
-  | { type: 'SET_USER'; payload: User }
+  | { type: 'SET_USER'; payload: Auth }
   | { type: 'LOGOUT' }
   | { type: 'SET_PROJECTS'; payload: Project[] | string[] }
   | { type: 'SET_PROJECT'; payload: Project }

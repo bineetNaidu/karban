@@ -4,6 +4,7 @@ import router from 'next/router';
 import useForm from '../hooks/useForm';
 import { useMutation } from '@apollo/client';
 import { SIGNUP } from '../utils/queries/signup';
+import { dispatchAction } from '../data/State.context';
 
 const Signup: FC = () => {
   const [username, handleUsername] = useForm('');
@@ -23,6 +24,7 @@ const Signup: FC = () => {
       if (errors) return; // !FIX: better error handlings
 
       localStorage.setItem('KARBAN_TOKEN', data.token);
+      dispatchAction({ type: 'SET_USER', payload: data });
       router.push('/dashboard');
     }
   };
