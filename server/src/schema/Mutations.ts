@@ -37,7 +37,34 @@ export const Mutation = new GraphQLObjectType({
         });
         await karban.save();
         const token = createToken(karban._id);
-        return { token };
+        return {
+          token,
+          username: karban.username,
+          avatar: karban.avatar,
+          email: karban.email,
+        };
+      },
+    },
+
+    login: {
+      type: AuthType,
+      args: {
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        try {
+          const karbanUser = await Karban.login(args.username, args.password);
+          const token = createToken(karbanUser._id);
+          return {
+            token,
+            username: karbanUser.username,
+            avatar: karbanUser.avatar,
+            email: karbanUser.email,
+          };
+        } catch (e) {
+          throw new GraphQLError(e.message);
+        }
       },
     },
 

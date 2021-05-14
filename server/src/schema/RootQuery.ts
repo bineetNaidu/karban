@@ -24,23 +24,6 @@ export const RootQuery = new GraphQLObjectType({
       },
     },
 
-    login: {
-      type: AuthType,
-      args: {
-        username: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      async resolve(_, args) {
-        try {
-          const karbanUser = await Karban.login(args.username, args.password);
-          const token = createToken(karbanUser._id);
-          return { token };
-        } catch (e) {
-          throw new GraphQLError(e.message);
-        }
-      },
-    },
-
     getProjectById: {
       type: KarbanProjectType,
       args: {

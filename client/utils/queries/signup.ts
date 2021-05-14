@@ -14,6 +14,10 @@ export const SIGNUP = gql`
       username: $username
     ) {
       token
+      _id
+      username
+      email
+      avatar
     }
   }
 `;
