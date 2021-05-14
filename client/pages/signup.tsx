@@ -1,6 +1,9 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
+import router from 'next/router';
 import useForm from '../hooks/useForm';
+import { useMutation } from '@apollo/client';
+import { SIGNUP } from '../utils/queries/signup';
 
 const Signup: FC = () => {
   const [username, handleUsername] = useForm('');
@@ -8,10 +11,19 @@ const Signup: FC = () => {
   const [email, handleEmail] = useForm('');
   const [avatar, handleAvatar] = useForm('');
   const [remember, setRemember] = useState(false);
+  const [signUp] = useMutation(SIGNUP);
 
-  const createKarbanAccount = async () => {
-    if (username && password) {
-      //  TODO: Fix this
+  const createKarbanAccount = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (username && password && email) {
+      const { errors, data } = await signUp({
+        variables: { username, password, email, avatar },
+      });
+
+      if (errors) return; // !FIX: better error handlings
+
+      localStorage.setItem('KARBAN_TOKEN', data.token);
+      router.push('/dashboard');
     }
   };
 
@@ -51,7 +63,6 @@ const Signup: FC = () => {
             <input
               value={avatar}
               onChange={handleAvatar}
-              required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Avatar"
             />
