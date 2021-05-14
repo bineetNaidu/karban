@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { ApolloProvider } from '@apollo/client/react';
 import { client } from '../utils/ApolloClient';
 import 'tailwindcss/tailwind.css';
+import StateProvider from '../data/State.context';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -11,7 +12,9 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <main>
         <ApolloProvider client={client}>
-          <Component {...pageProps} />
+          <StateProvider>
+            <Component {...pageProps} />
+          </StateProvider>
         </ApolloProvider>
       </main>
     </>
