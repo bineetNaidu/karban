@@ -14,13 +14,14 @@ import { KarbanProjectTabCardType } from './Types/KarbanProjectTabCardType';
 import { KarbanProjectTabType } from './Types/KarbanProjectTabType';
 import { KarbanProjectType } from './Types/KarbanProjectType';
 import { KarbanType } from './Types/KarbanType';
+import { AuthType } from './Types/AuthType';
 import { createToken } from '../utils/createToken';
 
 export const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     signUp: {
-      type: KarbanType,
+      type: AuthType,
       args: {
         avatar: { type: GraphQLString },
         email: { type: new GraphQLNonNull(GraphQLString) },
