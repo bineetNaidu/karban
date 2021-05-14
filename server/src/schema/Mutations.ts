@@ -14,13 +14,14 @@ import { KarbanProjectTabCardType } from './Types/KarbanProjectTabCardType';
 import { KarbanProjectTabType } from './Types/KarbanProjectTabType';
 import { KarbanProjectType } from './Types/KarbanProjectType';
 import { KarbanType } from './Types/KarbanType';
+import { AuthType } from './Types/AuthType';
 import { createToken } from '../utils/createToken';
 
 export const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     signUp: {
-      type: KarbanType,
+      type: AuthType,
       args: {
         avatar: { type: GraphQLString },
         email: { type: new GraphQLNonNull(GraphQLString) },
@@ -36,7 +37,34 @@ export const Mutation = new GraphQLObjectType({
         });
         await karban.save();
         const token = createToken(karban._id);
-        return { token };
+        return {
+          token,
+          username: karban.username,
+          avatar: karban.avatar,
+          email: karban.email,
+        };
+      },
+    },
+
+    login: {
+      type: AuthType,
+      args: {
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        try {
+          const karbanUser = await Karban.login(args.username, args.password);
+          const token = createToken(karbanUser._id);
+          return {
+            token,
+            username: karbanUser.username,
+            avatar: karbanUser.avatar,
+            email: karbanUser.email,
+          };
+        } catch (e) {
+          throw new GraphQLError(e.message);
+        }
       },
     },
 
