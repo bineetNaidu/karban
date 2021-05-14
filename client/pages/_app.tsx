@@ -1,5 +1,6 @@
 import Head from 'next/head';
-// import '../styles/globals.css';
+import { ApolloProvider } from '@apollo/client/react';
+import { client } from '../utils/ApolloClient';
 import 'tailwindcss/tailwind.css';
 
 function MyApp({ Component, pageProps }) {
@@ -9,7 +10,9 @@ function MyApp({ Component, pageProps }) {
         <title>Karban | bineetnaidu.io</title>
       </Head>
       <main>
-        <Component {...pageProps} />
+        <ApolloProvider client={client}>
+          <Component {...pageProps} />
+        </ApolloProvider>
       </main>
     </>
   );
