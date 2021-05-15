@@ -4,7 +4,7 @@ import router from 'next/router';
 import useForm from '../hooks/useForm';
 import { useMutation } from '@apollo/client';
 import { SIGNUP } from '../utils/queries/signup';
-// import { useStateValue } from '../data/State.context';
+import { useStateValue } from '../data/StateContext';
 
 const Signup: FC = () => {
   const [username, handleUsername] = useForm('');
@@ -13,7 +13,7 @@ const Signup: FC = () => {
   const [avatar, handleAvatar] = useForm('');
   const [remember, setRemember] = useState(false);
   const [signUp] = useMutation(SIGNUP);
-  // const [, disptach] = useStateValue();
+  const [, disptach] = useStateValue();
 
   const createKarbanAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,9 +25,17 @@ const Signup: FC = () => {
       if (errors) return; // !FIX: better error handlings
 
       localStorage.setItem('KARBAN_TOKEN', data.signUp.token);
-
-      // disptach({ type: 'SET_USER', payload: data });
-      // router.push('/dashboard');
+      disptach({
+        type: 'SET_USER',
+        payload: {
+          _id: data.signUp._id,
+          email: data.signUp.email,
+          token: data.signUp.token,
+          username: data.signUp.username,
+          avatar: data.signUp.avatar,
+        },
+      });
+      router.push('/dashboard');
     }
   };
 

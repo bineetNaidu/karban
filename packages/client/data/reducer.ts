@@ -1,4 +1,4 @@
-import { ActionTypes, StateContextType } from '../utils/types';
+import { StateContextType, ActionTypes } from '../utils/types';
 
 export const initialValue: StateContextType = {
   user: null,
@@ -6,27 +6,15 @@ export const initialValue: StateContextType = {
 };
 
 const reducer = (
-  state: StateContextType,
+  state = initialValue,
   action: ActionTypes
 ): StateContextType => {
   switch (action.type) {
     case 'SET_USER':
-      return {
-        ...state,
-        user: action.payload,
-      };
-
-    case 'SET_PROJECTS':
-      return {
-        ...state,
-        projects: action.payload,
-      };
+      return { ...state, user: action.payload };
 
     case 'LOGOUT':
-      return {
-        user: null,
-        projects: [],
-      };
+      return { ...state, user: null };
 
     default:
       return state;
