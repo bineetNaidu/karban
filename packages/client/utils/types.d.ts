@@ -1,6 +1,7 @@
 export type User = {
   _id: string;
   email: string;
+  token: string;
   username: string;
   avatar?: string;
 };
@@ -27,12 +28,8 @@ export interface StateContextType {
   projects: Project[] | string[] | null;
 }
 
-interface Auth extends User {
-  token: string;
-}
-
 export type ActionTypes =
-  | { type: 'SET_USER'; payload: Auth }
+  | { type: 'SET_USER'; payload: User }
   | { type: 'LOGOUT' }
   | { type: 'SET_PROJECTS'; payload: Project[] | string[] }
   | { type: 'SET_PROJECT'; payload: Project }
