@@ -1,16 +1,39 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
+import router from 'next/router';
 import useForm from '../hooks/useForm';
+import { useMutation } from '@apollo/client';
+import { LOGIN } from '../utils/queries/login';
+import { useStateValue } from '../data/StateContext';
 
 const Login: FC = () => {
   const [username, handleUsername] = useForm('');
   const [password, handlePassword] = useForm('');
   const [remember, setRemember] = useState(false);
+  const [login] = useMutation(LOGIN);
+  const [, dispatch] = useStateValue();
 
-  // TODO: Fix KarbanLogin!!
-  const findKarbanHandler = async () => {
+  const findKarbanHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (username && password) {
-      // localStorage.setItem('karbanId', karban._id);
+      const { errors, data } = await login({
+        variables: { username, password },
+      });
+
+      if (errors) return; // !FIX: better error handlings
+
+      localStorage.setItem('KARBAN_TOKEN', data.login.token);
+      dispatch({
+        type: 'SET_USER',
+        payload: {
+          _id: data.login._id,
+          email: data.login.email,
+          token: data.login.token,
+          username: data.login.username,
+          avatar: data.login.avatar,
+        },
+      });
+      router.push('/dashboard');
     }
   };
 
