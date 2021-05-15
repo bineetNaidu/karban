@@ -1,5 +1,5 @@
 {
-  "name": "karban-server",
+  "name": "@karban/server",
   "version": "1.0.0",
   "description": "A Express js api server for karban client",
   "main": "app.ts",
