@@ -13,7 +13,7 @@ const Signup: FC = () => {
   const [avatar, handleAvatar] = useForm('');
   const [remember, setRemember] = useState(false);
   const [signUp] = useMutation(SIGNUP);
-  const [, disptach] = useStateValue();
+  const [, dispatch] = useStateValue();
 
   const createKarbanAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ const Signup: FC = () => {
       if (errors) return; // !FIX: better error handlings
 
       localStorage.setItem('KARBAN_TOKEN', data.signUp.token);
-      disptach({
+      dispatch({
         type: 'SET_USER',
         payload: {
           _id: data.signUp._id,
