@@ -1,0 +1,29 @@
+{
+  "name": "karban",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "description": "A Kanban board is one of the tools that can be used to implement Kanban to manage work at a personal or organizational level.",
+  "scripts": {
+    "build": "lerna run build",
+    "dev:server": "npm run dev --prefix packages/server",
+    "dev:client": "npm run dev --prefix packages/client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bineetNaidu/karban.git"
+  },
+  "author": "BineetNaidu <bineet.s.naidu@gmail.com> (https://bineetnaidu-io.web.app/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bineetNaidu/karban/issues"
+  },
+  "homepage": "https://github.com/bineetNaidu/karban#readme",
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "lerna": "^4.0.0"
+  }
+}
