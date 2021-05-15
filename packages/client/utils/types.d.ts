@@ -25,13 +25,13 @@ export type Project = {
 
 export interface StateContextType {
   user: User | null;
-  projects: Project[] | string[] | null;
+  projects: Project[] | null;
 }
 
 export type ActionTypes =
   | { type: 'SET_USER'; payload: User }
   | { type: 'LOGOUT' }
-  | { type: 'SET_PROJECTS'; payload: Project[] | string[] }
-  | { type: 'SET_PROJECT'; payload: Project }
+  | { type: 'SET_PROJECTS'; payload: Project[] }
+  | { type: 'ADD_PROJECT'; payload: Project }
   | { type: 'ADD_CARD'; payload: { cardId: string; cardBody: string } }
   | { type: 'ADD_TAB'; payload: Tab };
