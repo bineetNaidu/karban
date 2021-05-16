@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 import NotFoundError from './utils/NotFoundError';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import { graphqlHTTP } from 'express-graphql';
-import schema from './schema';
 import 'express-async-errors';
 
 // ***** App Config *****
@@ -34,7 +33,6 @@ helmet.contentSecurityPolicy({
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema,
     graphiql: true,
     pretty: true,
   })
