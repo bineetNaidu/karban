@@ -15,6 +15,9 @@ dotenv.config();
     resolvers,
     cors: true,
     tracing: true,
+    context: ({ req }) => {
+      // /
+    },
   });
 
   // The `listen` method launches a web server.
