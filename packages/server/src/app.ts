@@ -8,6 +8,7 @@ import connectDB from './config/db';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
 import apiRouter from './api';
+import { createContext } from './utils/createContext';
 
 // ***** App Config *****
 dotenv.config();
@@ -16,6 +17,7 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => createContext(req),
 });
 
 app.use(express.json());
