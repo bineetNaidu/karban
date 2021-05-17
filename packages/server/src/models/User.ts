@@ -6,18 +6,12 @@ import Project from './Project';
 interface UserDoc extends mongoose.Document {
   username: string;
   avatar: string;
-  email: string;
   githubId: string;
   projects: string[];
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
-  build(data: {
-    username: string;
-    avatar: string;
-    email: string;
-    githubId: string;
-  }): UserDoc;
+  build(data: { username: string; avatar: string; githubId: string }): UserDoc;
 }
 
 const UserSchema = new mongoose.Schema<UserDoc, UserModel>(
@@ -26,10 +20,6 @@ const UserSchema = new mongoose.Schema<UserDoc, UserModel>(
     avatar: {
       type: String,
       default: '',
-    },
-    email: {
-      ...StringAndRequiredAndUnique,
-      lowercase: true,
     },
     githubId: StringAndRequiredAndUnique,
     projects: [
@@ -55,7 +45,6 @@ UserSchema.pre('remove', async function () {
 UserSchema.statics.build = (data: {
   username: string;
   avatar: string;
-  email: string;
   githubId: string;
 }) => {
   return new User(data);
