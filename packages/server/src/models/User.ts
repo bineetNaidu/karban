@@ -7,7 +7,7 @@ interface UserDoc extends mongoose.Document {
   username: string;
   avatar: string;
   email: string;
-  password: string;
+  githubId: string;
   projects: string[];
 }
 
@@ -16,10 +16,8 @@ interface UserModel extends mongoose.Model<UserDoc> {
     username: string;
     avatar: string;
     email: string;
-    password: string;
+    githubId: string;
   }): UserDoc;
-
-  login(username: string, password: string): Promise<UserDoc>;
 }
 
 const UserSchema = new mongoose.Schema<UserDoc, UserModel>(
@@ -33,7 +31,6 @@ const UserSchema = new mongoose.Schema<UserDoc, UserModel>(
       ...StringAndRequiredAndUnique,
       lowercase: true,
     },
-    password: StringAndRequired,
     githubId: StringAndRequiredAndUnique,
     projects: [
       {
@@ -47,12 +44,6 @@ const UserSchema = new mongoose.Schema<UserDoc, UserModel>(
   }
 );
 
-UserSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
 UserSchema.pre('remove', async function () {
   await Project.remove({
     _id: {
@@ -61,25 +52,11 @@ UserSchema.pre('remove', async function () {
   });
 });
 
-UserSchema.statics.login = async function (username: string, password: string) {
-  const user = await this.findOne({ username });
-  if (user) {
-    let authUser = await bcrypt.compare(password, user.password);
-
-    if (authUser) {
-      return user;
-    } else {
-      throw new Error('Incorrect Password');
-    }
-  }
-  throw new Error('Incorrect Username');
-};
-
 UserSchema.statics.build = (data: {
   username: string;
   avatar: string;
   email: string;
-  password: string;
+  githubId: string;
 }) => {
   return new User(data);
 };
