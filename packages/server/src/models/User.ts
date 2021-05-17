@@ -34,6 +34,7 @@ const UserSchema = new mongoose.Schema<UserDoc, UserModel>(
       lowercase: true,
     },
     password: StringAndRequired,
+    githubId: StringAndRequiredAndUnique,
     projects: [
       {
         type: mongoose.Schema.Types.ObjectId,

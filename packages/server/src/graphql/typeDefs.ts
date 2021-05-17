@@ -24,6 +24,7 @@ export const typeDefs = gql`
     username: String!
     avatar: String
     email: String!
+    githubId: String!
     projects: [Project]
   }
 
@@ -35,13 +36,6 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signUp(
-      username: String!
-      avatar: String
-      email: String!
-      password: String!
-    ): User!
-    login(username: String!, password: String!): User
     createProject(projectName: String!, projectDescription: String!): Project
     createTab(projectId: ID!, tabName: String!): Tab
     createCard(projectId: ID!, cardId: ID!, cardBody: String!): Card
