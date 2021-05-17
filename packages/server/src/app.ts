@@ -2,22 +2,48 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import dotenv from 'dotenv';
+import passport from 'passport';
+import expressSession from 'express-session';
 import connectDB from './config/db';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
+import apiRouter from './api';
 
 // ***** App Config *****
 dotenv.config();
 
 const app = express();
-
-app.use(express.json());
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
+app.use(express.json());
+
+/* Express-Session configuration */
+app.use(
+  expressSession({
+    secret: process.env.JWT_SECRET!,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: undefined,
+      signed: true,
+      sameSite: 'lax',
+    },
+  })
+);
+
+/* Passport configuration */
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user: Express.User, done) => done(null, user));
+
+app.use('/api', apiRouter(passport));
+
+/* Apollo GraphQL Server */
 server.applyMiddleware({ app });
 
 // (async () => {
