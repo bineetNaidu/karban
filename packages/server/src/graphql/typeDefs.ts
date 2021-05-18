@@ -29,6 +29,7 @@ export const typeDefs = gql`
   }
 
   type Query {
+    authenticatedUser: User
     allProjects: [Project]
     allUsers: [Project]
     getProjectById(id: ID!): Project
