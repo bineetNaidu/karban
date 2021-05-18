@@ -16,7 +16,7 @@ export default (passport: PassportStatic): Router => {
         const id = String(profile.id);
 
         try {
-          const userExist = await User.findOne({ where: { githubId: id } });
+          const userExist = await User.findOne({ githubId: id });
 
           // Store data from GitHub only on user's first login
           if (userExist) {

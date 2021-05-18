@@ -14,11 +14,6 @@ import { createContext } from './utils/createContext';
 dotenv.config();
 
 const app = express();
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: async ({ req }) => createContext(req),
-});
 
 app.use(express.json());
 
@@ -32,7 +27,6 @@ app.use(
       secure: process.env.NODE_ENV === 'production',
       maxAge: undefined,
       signed: true,
-      sameSite: 'lax',
     },
   })
 );
@@ -42,6 +36,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user: Express.User, done) => done(null, user));
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: async ({ req }) => createContext(req),
+});
 
 app.use('/api', apiRouter(passport));
 
