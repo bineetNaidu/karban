@@ -1,6 +1,7 @@
-import Project from '../../../models/Project';
+import Project, { ProjectDoc } from '../../../models/Project';
 
-export const allProjects = async () => {
+// @ts-ignore
+export const allProjects: Promise<ProjectDoc[]> = async () => {
   const projects = await Project.find({}).populate('tabs').exec();
   return projects;
 };

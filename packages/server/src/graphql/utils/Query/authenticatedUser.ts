@@ -1,8 +1,8 @@
-import User from '../../../models/User';
+import User, { UserDoc } from '../../../models/User';
 import { ContextType } from '../../../utils/createContext';
 
 // @ts-ignore
-export const authenticatedUser: Promise<typeof User> = async (
+export const authenticatedUser: Promise<UserDoc> = async (
   _parent: any,
   _args: any,
   ctx: ContextType

@@ -1,6 +1,7 @@
-import User from '../../../models/User';
+import User, { UserDoc } from '../../../models/User';
 
-export const allUsers = async () => {
+// @ts-ignore
+export const allUsers: Promise<UserDoc[]> = async () => {
   const users = await User.find({}).populate('projects').exec();
   return users;
 };

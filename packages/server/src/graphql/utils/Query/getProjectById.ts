@@ -1,7 +1,7 @@
-import Project from '../../../models/Project';
+import Project, { ProjectDoc } from '../../../models/Project';
 
 // @ts-ignore
-export const getProjectById: Promise<typeof Project> = async (
+export const getProjectById: Promise<ProjectDoc> = async (
   parent: any,
   args: { id: string }
 ) => {

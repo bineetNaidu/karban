@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import Tab from './Tab';
 import { StringAndRequired } from './utils';
 
-interface ProjectDoc extends mongoose.Document {
+export interface ProjectDoc extends mongoose.Document {
   projectName: string;
   projectDescription?: string;
   tabs: string[];

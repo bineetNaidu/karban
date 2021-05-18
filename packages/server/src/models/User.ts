@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { StringAndRequired, StringAndRequiredAndUnique } from './utils';
 import Project from './Project';
 
-interface UserDoc extends mongoose.Document {
+export interface UserDoc extends mongoose.Document {
   username: string;
   avatar: string;
   githubId: string;

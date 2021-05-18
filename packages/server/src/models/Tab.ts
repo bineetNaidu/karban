@@ -6,7 +6,7 @@ type Card = {
   cardBody?: string;
 };
 
-interface TabDoc extends mongoose.Document {
+export interface TabDoc extends mongoose.Document {
   tabName: string;
   cards: Card[];
 }
