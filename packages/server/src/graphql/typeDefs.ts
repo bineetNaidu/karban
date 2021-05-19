@@ -35,14 +35,20 @@ export const typeDefs = gql`
     getTabById(id: ID!): Tab
   }
 
-  input UpdateDataInput {
+  input ProjectUpdateDataInput {
     projectName: String
     projectDescription: String
   }
 
   type Mutation {
+    # Projects
     createProject(projectName: String!, projectDescription: String!): Project
-    updateProject(id: ID!, data: UpdateDataInput): Project
+    updateProject(id: ID!, data: ProjectUpdateDataInput): Project
     deleteProject(id: ID!): Boolean
+
+    # Tabs
+    createTab(projectId: ID!, tabName: String!): Tab
+    updateTab(projectId: ID!, tabName: String): Tab
+    deleteTab(projectId: ID!, tabId: ID!): Boolean
   }
 `;
