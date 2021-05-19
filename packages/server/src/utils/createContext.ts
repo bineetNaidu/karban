@@ -1,24 +1,24 @@
 import { Request } from 'express';
-import User from '../models/User';
+import { ObjectId } from 'mongoose';
+import User, { UserDoc } from '../models/User';
 
 export type ContextType = {
   hasAuth: boolean;
   uid: string;
-  getUser: () => Promise<typeof User | null>;
+  getUser: () => Promise<UserDoc>;
   req: Request;
 };
 
 export const createContext = async (req: Request): Promise<ContextType> => {
-  const uid = (req.session as any).passport?.user?.id;
+  const uid = (req.session as any).passport?.user?._id;
 
   return {
     hasAuth: !!uid,
     uid,
     // @ts-ignore
     getUser: async () => {
-      const user = await User.findOne(uid);
-
-      return user ?? null;
+      const user = await User.findOne({ _id: uid });
+      return user;
     },
     req,
   };
