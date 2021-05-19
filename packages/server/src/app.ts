@@ -25,7 +25,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       secure: process.env.NODE_ENV === 'production',
-      maxAge: undefined,
+      maxAge: 60 * 60 * 24,
       signed: true,
     },
   })

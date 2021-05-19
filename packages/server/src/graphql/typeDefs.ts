@@ -23,7 +23,6 @@ export const typeDefs = gql`
     _id: ID
     username: String!
     avatar: String
-    email: String!
     githubId: String!
     projects: [Project]
   }
@@ -31,14 +30,18 @@ export const typeDefs = gql`
   type Query {
     authenticatedUser: User
     allProjects: [Project]
-    allUsers: [Project]
+    allUsers: [User]
     getProjectById(id: ID!): Project
     getTabById(id: ID!): Tab
   }
 
+  input UpdateDataInput {
+    projectName: String
+    projectDescription: String
+  }
+
   type Mutation {
     createProject(projectName: String!, projectDescription: String!): Project
-    createTab(projectId: ID!, tabName: String!): Tab
-    createCard(projectId: ID!, cardId: ID!, cardBody: String!): Card
+    updateProject(id: ID!, data: UpdateDataInput): Project
   }
 `;
