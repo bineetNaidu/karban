@@ -3,6 +3,7 @@ import { updateProject } from './updateProject';
 import { deleteProject } from './deleteProject';
 import { createTab } from './createTab';
 import { updateTab } from './updateTab';
+import { deleteTab } from './deleteTab';
 
 export const Mutation: any = {
   createProject,
@@ -10,4 +11,5 @@ export const Mutation: any = {
   deleteProject,
   createTab,
   updateTab,
+  deleteTab,
 };
