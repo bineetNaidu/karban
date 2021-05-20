@@ -9,6 +9,8 @@ import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
 import apiRouter from './api';
 import { createContext } from './utils/createContext';
+import ExpressErrorHandler from './utils/ExpressErrorHandler';
+import NotFoundError from './utils/NotFoundError';
 
 // ***** App Config *****
 dotenv.config();
@@ -23,6 +25,7 @@ app.use(
     secret: process.env.JWT_SECRET!,
     resave: false,
     saveUninitialized: true,
+    name: 'KarbanSess',
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24,
@@ -47,6 +50,13 @@ app.use('/api', apiRouter(passport));
 
 /* Apollo GraphQL Server */
 server.applyMiddleware({ app });
+
+//! Not found page error
+app.all('*', () => {
+  throw new NotFoundError();
+});
+// ! Error Handlers
+app.use(ExpressErrorHandler);
 
 // (async () => {
 connectDB().then(() => {
