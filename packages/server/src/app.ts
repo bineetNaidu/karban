@@ -1,59 +1,55 @@
 // ***** IMPORT *****
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import dotenv from 'dotenv';
-import passport from 'passport';
-import expressSession from 'express-session';
+import helmet from 'helmet';
+import cors from 'cors';
 import connectDB from './config/db';
-import { typeDefs } from './graphql/typeDefs';
-import { resolvers } from './graphql/resolvers';
-import apiRouter from './api';
-import { createContext } from './utils/createContext';
+import dotenv from 'dotenv';
+import NotFoundError from './utils/NotFoundError';
+import ExpressErrorHandler from './utils/ExpressErrorHandler';
+import { graphqlHTTP } from 'express-graphql';
+import schema from './schema';
+import 'express-async-errors';
 
 // ***** App Config *****
 dotenv.config();
 
 const app = express();
+connectDB();
 
-app.use(express.json());
+// ***** Middlewares *****
+app.use(cors());
+helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: [],
+    connectSrc: ["'self'"],
+    scriptSrc: ["'unsafe-inline'", "'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    workerSrc: ["'self'", 'blob:'],
+    objectSrc: [],
+    imgSrc: ["'self'", 'blob:', 'data:'],
+    fontSrc: ["'self'"],
+  },
+});
 
-/* Express-Session configuration */
 app.use(
-  expressSession({
-    secret: process.env.JWT_SECRET!,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24,
-      signed: true,
-    },
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+    pretty: true,
   })
 );
 
-/* Passport configuration */
-app.use(passport.initialize());
-app.use(passport.session());
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user: Express.User, done) => done(null, user));
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: async ({ req }) => createContext(req),
+//! Not found page error
+app.all('*', () => {
+  throw new NotFoundError();
 });
+// ! Error Handlers
+app.use(ExpressErrorHandler);
 
-app.use('/api', apiRouter(passport));
-
-/* Apollo GraphQL Server */
-server.applyMiddleware({ app });
-
-// (async () => {
-connectDB().then(() => {
-  const port = process.env.PORT || 4242;
-  app.listen({ port }, () =>
-    console.log(
-      `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
-    )
-  );
+// **** Listeners ****
+app.listen(process.env.PORT || 4242, () => {
+  console.log('-----------------------------------------');
+  console.log('>>>>>>> KARBAN SERVER HAS STARTED <<<<<<<<');
+  console.log('-----------------------------------------');
 });
