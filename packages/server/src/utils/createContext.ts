@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { ObjectId } from 'mongoose';
 import User, { UserDoc } from '../models/User';
 
 export type ContextType = {

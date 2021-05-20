@@ -11,7 +11,9 @@ export const authenticatedUser: Promise<UserDoc> = async (
     throw new Error('No Authenticated user');
   }
 
-  const authUser = await ctx.getUser();
+  const authUser = await User.findOne({ _id: ctx.uid })
+    .populate('projects')
+    .exec();
 
   return authUser;
 };
