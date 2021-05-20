@@ -4,7 +4,7 @@
   "description": "A Express js api server for karban client",
   "main": "app.ts",
   "repository": "https://github.com/bineetNaidu/karban",
-  "author": "BineetNaidu <bineet.s.naidu@gmail.com> (https://bineetnaidu-io.web.app)",
+  "author": "BineetNaidu <bineet.s.naidu@gmail.com> (https://bineetnaidu.github.io)",
   "license": "MIT",
   "private": true,
   "scripts": {
