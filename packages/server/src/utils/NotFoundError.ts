@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import CustomError from './CustomError';
 
 export default class NotFoundError extends CustomError {
