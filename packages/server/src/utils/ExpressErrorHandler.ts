@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { NextFunction, Response, Request } from 'express';
 import CustomError from './CustomError';
 
