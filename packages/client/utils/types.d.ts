@@ -21,6 +21,11 @@ export type Project = {
   tabs: Tab[];
 };
 
+export interface ApiErrorObj {
+  name: string;
+  message: string;
+}
+
 export interface StateContextType {
   user: User | null;
   projects: Project[] | null;

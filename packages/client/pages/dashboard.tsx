@@ -1,28 +1,40 @@
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@apollo/client';
 import Navbar from '../components/Navbar';
 import ProjectCard from '../components/ProjectCard';
 import { useStateValue } from '../data/StateContext';
-import { GET_PROJECTS } from '../utils/queries/getProjects';
+import { AUTHENTICATED_USER } from '../utils/queries/authenticatedUser';
+import { GetServerSideProps } from 'next';
+import { ApiErrorObj, Project, User } from '../utils/types';
+import { client } from '../utils/ApolloClient';
 
-const dashboard = () => {
+interface AuthUser extends User {
+  projects: Project[];
+}
+
+type DataType = {
+  authUser: AuthUser;
+  errors: null | ApiErrorObj[];
+};
+
+const dashboard: FC<DataType> = ({ authUser, errors }) => {
   const [{ user, projects }, dispatch] = useStateValue();
 
-  const { loading, error, data } = useQuery(GET_PROJECTS, {
-    variables: { token: user.token },
-  });
-
   useEffect(() => {
-    if (data) {
-      dispatch({
-        type: 'SET_PROJECTS',
-        payload: data.getProjects,
-      });
-    }
-  }, [data]);
-
-  if (loading) return <h1>Loading...</h1>;
+    dispatch({
+      type: 'SET_USER',
+      payload: {
+        _id: authUser._id,
+        githubId: authUser.githubId,
+        username: authUser.username,
+        avatar: authUser.avatar,
+      },
+    });
+    dispatch({
+      type: 'SET_PROJECTS',
+      payload: authUser.projects,
+    });
+  }, []);
 
   return (
     <div>
@@ -88,6 +100,55 @@ const dashboard = () => {
       </section>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const authHeader = ctx.req.headers.authorization;
+  const token = authHeader ? authHeader.split(' ') : null;
+
+  if (!token) {
+    return {
+      props: {
+        errors: [
+          {
+            name: 'Not authorized',
+            message: 'Please login First!',
+          },
+        ],
+      },
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const { data, errors } = await client.query({ query: AUTHENTICATED_USER });
+  if (!errors && data) {
+    const propsData: DataType = {
+      errors: null,
+      authUser: data.authenticatedUser,
+    };
+
+    return {
+      props: propsData,
+    };
+  }
+
+  return {
+    props: {
+      errors: errors.forEach((e) => {
+        return {
+          name: e.name,
+          message: e.message,
+        };
+      }),
+    },
+    redirect: {
+      destination: '/',
+      permanent: false,
+    },
+  };
 };
 
 export default dashboard;
