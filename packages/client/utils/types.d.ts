@@ -1,14 +1,12 @@
 export type User = {
   _id: string;
-  email: string;
-  token: string;
+  githubId: string;
   username: string;
   avatar?: string;
 };
 
 export type Tab = {
   _id: string;
-  tabId: string;
   tabName: string;
   cards: {
     cardId;

@@ -24,14 +24,16 @@ export default function Home() {
             >
               <div className="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                 <div className="flex items-center justify-between w-full md:w-auto">
-                  <a href="/">
-                    <span className="sr-only">Workflow</span>
-                    <img
-                      className="h-8 w-auto sm:h-10"
-                      alt="brand logo"
-                      src="/brand.svg"
-                    />
-                  </a>
+                  <Link href="/">
+                    <a>
+                      <span className="sr-only">Workflow</span>
+                      <img
+                        className="h-8 w-auto sm:h-10"
+                        alt="brand logo"
+                        src="/brand.svg"
+                      />
+                    </a>
+                  </Link>
                   <div className="-mr-2 flex items-center md:hidden">
                     <button
                       type="button"
@@ -67,15 +69,9 @@ export default function Home() {
                   </a>
                 </Link>
 
-                <Link href="/features">
+                <Link href="/product">
                   <a className="font-medium text-gray-500 hover:text-gray-900">
-                    Features
-                  </a>
-                </Link>
-
-                <Link href="/login">
-                  <a className="font-medium text-indigo-600 hover:text-indigo-500">
-                    Log in
+                    Product
                   </a>
                 </Link>
               </div>
@@ -126,26 +122,16 @@ export default function Home() {
                           className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                           role="menuitem"
                         >
-                          Product
+                          Dashboard
                         </a>
                       </Link>
 
-                      <Link href="/features">
+                      <Link href="/product">
                         <a
                           className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                           role="menuitem"
                         >
-                          Features
-                        </a>
-                      </Link>
-                    </div>
-                    <div role="none">
-                      <Link href="/login">
-                        <a
-                          className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
-                          role="menuitem"
-                        >
-                          Log in
+                          Product
                         </a>
                       </Link>
                     </div>
@@ -181,7 +167,7 @@ export default function Home() {
                     href="/"
                     className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
                   >
-                    Live demo
+                    View Product
                   </a>
                 </div>
               </div>
