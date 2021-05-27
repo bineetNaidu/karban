@@ -28,8 +28,10 @@ app.use(
     name: 'KarbanSess',
     cookie: {
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 60 * 24,
       signed: true,
+      httpOnly: true,
+      sameSite: 'lax',
     },
   })
 );
@@ -40,13 +42,13 @@ app.use(passport.session());
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user: Express.User, done) => done(null, user));
 
+app.use('/api', apiRouter(passport));
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => createContext(req),
 });
-
-app.use('/api', apiRouter(passport));
 
 /* Apollo GraphQL Server */
 server.applyMiddleware({ app });
