@@ -3,21 +3,17 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import ProjectCard from '../components/ProjectCard';
 import { useStateValue } from '../data/StateContext';
-import { AUTHENTICATED_USER } from '../utils/queries/authenticatedUser';
-import { GetServerSideProps } from 'next';
-import { ApiErrorObj, Project, User } from '../utils/types';
-import { client } from '../utils/ApolloClient';
+import { Project, User } from '../utils/types';
 
 interface AuthUser extends User {
   projects: Project[];
 }
 
 type DataType = {
-  authUser: AuthUser;
-  errors: null | ApiErrorObj[];
+  authUser: AuthUser | null;
 };
 
-const dashboard: FC<DataType> = ({ authUser, errors }) => {
+const dashboard: FC<DataType> = ({ authUser }) => {
   const [{ user, projects }, dispatch] = useStateValue();
 
   useEffect(() => {
@@ -100,55 +96,6 @@ const dashboard: FC<DataType> = ({ authUser, errors }) => {
       </section>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const authHeader = ctx.req.headers.authorization;
-  const token = authHeader ? authHeader.split(' ') : null;
-
-  if (!token) {
-    return {
-      props: {
-        errors: [
-          {
-            name: 'Not authorized',
-            message: 'Please login First!',
-          },
-        ],
-      },
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  const { data, errors } = await client.query({ query: AUTHENTICATED_USER });
-  if (!errors && data) {
-    const propsData: DataType = {
-      errors: null,
-      authUser: data.authenticatedUser,
-    };
-
-    return {
-      props: propsData,
-    };
-  }
-
-  return {
-    props: {
-      errors: errors.forEach((e) => {
-        return {
-          name: e.name,
-          message: e.message,
-        };
-      }),
-    },
-    redirect: {
-      destination: '/',
-      permanent: false,
-    },
-  };
 };
 
 export default dashboard;
