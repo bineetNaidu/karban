@@ -1,0 +1,11 @@
+query AuthenticatedUser {
+  authenticatedUser {
+    _id
+    username
+    avatar
+    githubId
+    projects {
+      _id
+    }
+  }
+}
