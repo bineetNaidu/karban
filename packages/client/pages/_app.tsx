@@ -1,8 +1,6 @@
 import Head from 'next/head';
-import { ApolloProvider } from '@apollo/client/react';
-import { client } from '../utils/ApolloClient';
-import 'tailwindcss/tailwind.css';
 import { StateContextProvider } from '../data/StateContext';
+import 'tailwindcss/tailwind.css';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -10,13 +8,11 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Karban | bineetnaidu.io</title>
       </Head>
-      <ApolloProvider client={client}>
-        <main>
-          <StateContextProvider>
-            <Component {...pageProps} />
-          </StateContextProvider>
-        </main>
-      </ApolloProvider>
+      <main>
+        <StateContextProvider>
+          <Component {...pageProps} />
+        </StateContextProvider>
+      </main>
     </>
   );
 }

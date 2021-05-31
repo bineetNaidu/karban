@@ -4,33 +4,36 @@ import Navbar from '../components/Navbar';
 import ProjectCard from '../components/ProjectCard';
 import { useStateValue } from '../data/StateContext';
 import { Project, User } from '../utils/types';
+import { withApollo } from '../lib/withApollo';
+import { useAuthenticatedUserQuery } from '../generated/graphql';
 
-interface AuthUser extends User {
-  projects: Project[];
-}
-
-type DataType = {
-  authUser: AuthUser | null;
-};
-
-const dashboard: FC<DataType> = ({ authUser }) => {
+const dashboard: FC = () => {
   const [{ user, projects }, dispatch] = useStateValue();
+  const { data, loading } = useAuthenticatedUserQuery();
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+  if (!loading && !data) {
+    return <h1>Something went wrong!</h1>;
+  }
 
-  useEffect(() => {
-    dispatch({
-      type: 'SET_USER',
-      payload: {
-        _id: authUser._id,
-        githubId: authUser.githubId,
-        username: authUser.username,
-        avatar: authUser.avatar,
-      },
-    });
-    dispatch({
-      type: 'SET_PROJECTS',
-      payload: authUser.projects,
-    });
-  }, []);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'SET_USER',
+  //     payload: {
+  //       _id: authUser._id,
+  //       githubId: authUser.githubId,
+  //       username: authUser.username,
+  //       avatar: authUser.avatar,
+  //     },
+  //   });
+  //   dispatch({
+  //     type: 'SET_PROJECTS',
+  //     payload: authUser.projects,
+  //   });
+  // }, []);
+
+  return <h1>{JSON.stringify(data, null, 2)}</h1>;
 
   return (
     <div>
@@ -98,4 +101,4 @@ const dashboard: FC<DataType> = ({ authUser }) => {
   );
 };
 
-export default dashboard;
+export default withApollo({ ssr: true })(dashboard);
