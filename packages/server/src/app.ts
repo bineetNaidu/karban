@@ -11,6 +11,7 @@ import apiRouter from './api';
 import { createContext } from './utils/createContext';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import NotFoundError from './utils/NotFoundError';
+import cors from 'cors';
 
 // ***** App Config *****
 dotenv.config();
@@ -18,6 +19,12 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
 /* Express-Session configuration */
 app.use(
@@ -51,7 +58,13 @@ const server = new ApolloServer({
 });
 
 /* Apollo GraphQL Server */
-server.applyMiddleware({ app });
+server.applyMiddleware({
+  app,
+  cors: {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  },
+});
 
 //! Not found page error
 app.all('*', () => {
