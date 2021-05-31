@@ -1,35 +1,16 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import ProjectCard from '../components/ProjectCard';
-import { useStateValue } from '../data/StateContext';
-import { Project, User } from '../utils/types';
 import { withApollo } from '../lib/withApollo';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
 import Spinner from '../components/Spinner';
 
 const dashboard: FC = () => {
-  const [{ user, projects }, dispatch] = useStateValue();
   const { data, loading } = useAuthenticatedUserQuery();
   if (!loading && !data) {
     return <h1>Something went wrong!</h1>;
   }
-
-  useEffect(() => {
-    dispatch({
-      type: 'SET_USER',
-      payload: {
-        _id: data.authenticatedUser._id,
-        githubId: data.authenticatedUser.githubId,
-        username: data.authenticatedUser.username,
-        avatar: data.authenticatedUser.avatar,
-      },
-    });
-    dispatch({
-      type: 'SET_PROJECTS',
-      payload: data.authenticatedUser.projects as any[],
-    });
-  }, []);
 
   return (
     <div>
@@ -78,7 +59,7 @@ const dashboard: FC = () => {
           {loading ? (
             <Spinner />
           ) : (
-            projects.map((project) => (
+            data.authenticatedUser.projects.map((project) => (
               <li key={project._id}>
                 <ProjectCard
                   description={project.projectDescription}

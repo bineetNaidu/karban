@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { StateContextProvider } from '../data/StateContext';
 import 'tailwindcss/tailwind.css';
 
 function MyApp({ Component, pageProps }) {
@@ -9,9 +8,7 @@ function MyApp({ Component, pageProps }) {
         <title>Karban | bineetnaidu.io</title>
       </Head>
       <main>
-        <StateContextProvider>
-          <Component {...pageProps} />
-        </StateContextProvider>
+        <Component {...pageProps} />
       </main>
     </>
   );

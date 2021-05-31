@@ -1,6 +1,5 @@
 import React from 'react';
 import router from 'next/router';
-import { useStateValue } from '../data/StateContext';
 import useForm from '../hooks/useForm';
 import { useCreateProjectMutation } from '../generated/graphql';
 import { withApollo } from '../lib/withApollo';
@@ -9,7 +8,6 @@ const NewProjectPage = () => {
   const [projectName, handleProjectname] = useForm('');
   const [projectDescription, handleProjectDesc] = useForm('');
   const [createProject] = useCreateProjectMutation();
-  const [, dispatch] = useStateValue();
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,17 +19,7 @@ const NewProjectPage = () => {
 
       if (errors) return;
 
-      dispatch({
-        type: 'ADD_PROJECT',
-        payload: {
-          _id: data.createProject._id,
-          projectDescription: data.createProject.projectDescription,
-          projectName: data.createProject.projectName,
-          tabs: [],
-        },
-      });
-
-      router.push('/dashboard');
+      if (data.createProject) router.push('/dashboard');
     }
   };
 
