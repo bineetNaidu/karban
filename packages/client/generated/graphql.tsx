@@ -184,7 +184,11 @@ export type AuthenticatedUserQuery = (
     & Pick<User, '_id' | 'username' | 'avatar' | 'githubId'>
     & { projects?: Maybe<Array<Maybe<(
       { __typename?: 'Project' }
-      & Pick<Project, '_id'>
+      & Pick<Project, '_id' | 'projectDescription' | 'projectName'>
+      & { tabs?: Maybe<Array<Maybe<(
+        { __typename?: 'Tab' }
+        & Pick<Tab, '_id'>
+      )>>> }
     )>>> }
   )> }
 );
@@ -338,6 +342,11 @@ export const AuthenticatedUserDocument = gql`
     githubId
     projects {
       _id
+      projectDescription
+      projectName
+      tabs {
+        _id
+      }
     }
   }
 }

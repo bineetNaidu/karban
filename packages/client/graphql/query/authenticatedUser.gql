@@ -6,6 +6,11 @@ query AuthenticatedUser {
     githubId
     projects {
       _id
+      projectDescription
+      projectName
+      tabs {
+        _id
+      }
     }
   }
 }

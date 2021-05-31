@@ -1,16 +1,20 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
+import { withApollo } from '../lib/withApollo';
+import { useAuthenticatedUserQuery } from '../generated/graphql';
 
-interface Props {
-  username: string;
-  avatar: string;
-}
-
-const Navbar: FC<Props> = ({ username, avatar }) => {
+const Navbar: FC = () => {
   const [open, setOpen] = useState(false);
+  const { data, loading } = useAuthenticatedUserQuery({
+    skip: typeof window === 'undefined',
+  });
+
+  if (loading) return <h1>Loading</h1>;
+
+  if (!data) return <h1>Something went Wrong!</h1>;
 
   const avatarSrc =
-    avatar ||
+    data.authenticatedUser.avatar ||
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80';
 
   const handleToggleOpen = () => {
@@ -81,7 +85,7 @@ const Navbar: FC<Props> = ({ username, avatar }) => {
 
             <div className="ml-3 relative flex justify-between">
               <p className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium mr-3">
-                @{username}
+                @{data.authenticatedUser.username}
               </p>
               <button
                 className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -128,4 +132,4 @@ const Navbar: FC<Props> = ({ username, avatar }) => {
   );
 };
 
-export default Navbar;
+export default withApollo({})(Navbar);

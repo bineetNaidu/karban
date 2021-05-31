@@ -8,11 +8,10 @@ const client = (ctx: NextPageContext) =>
     credentials: 'include',
 
     headers: {
-      host: !ctx ? undefined : ctx.req.headers.host,
-      allow: !ctx ? undefined : ctx.req.headers.allow,
-      accept: !ctx ? undefined : ctx.req.headers.accept,
-      authorization: !ctx ? undefined : ctx.req.headers.authorization,
-      cookie: !ctx ? undefined : ctx.req.headers.cookie,
+      cookie:
+        (typeof window === 'undefined'
+          ? ctx?.req?.headers.cookie
+          : undefined) || '',
     },
     cache: new InMemoryCache(),
   });

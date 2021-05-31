@@ -1,22 +1,22 @@
 import React from 'react';
 import router from 'next/router';
-import { useMutation } from '@apollo/client';
 import { useStateValue } from '../data/StateContext';
 import useForm from '../hooks/useForm';
-import { CREATE_PROJECT } from '../utils/queries/createProject';
+import { useCreateProjectMutation } from '../generated/graphql';
+import { withApollo } from '../lib/withApollo';
 
 const NewProjectPage = () => {
   const [projectName, handleProjectname] = useForm('');
   const [projectDescription, handleProjectDesc] = useForm('');
-  const [createProject] = useMutation(CREATE_PROJECT);
-  const [{ user }, dispatch] = useStateValue();
+  const [createProject] = useCreateProjectMutation();
+  const [, dispatch] = useStateValue();
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (projectDescription && projectName) {
       const { data, errors } = await createProject({
-        variables: { projectName, projectDescription, token: user.token },
+        variables: { projectName, projectDescription },
       });
 
       if (errors) return;
@@ -27,7 +27,7 @@ const NewProjectPage = () => {
           _id: data.createProject._id,
           projectDescription: data.createProject.projectDescription,
           projectName: data.createProject.projectName,
-          tabs: data.createProject.tabs,
+          tabs: [],
         },
       });
 
@@ -85,4 +85,4 @@ const NewProjectPage = () => {
   );
 };
 
-export default NewProjectPage;
+export default withApollo()(NewProjectPage);

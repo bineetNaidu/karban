@@ -14,9 +14,7 @@ const ProjectCard: FC<Props> = ({ description, id, name }) => {
         <dl className="grid sm:block lg:grid xl:block grid-cols-2 grid-rows-2 items-center">
           <div>
             <dt className="sr-only">Name</dt>
-            <dd className="group-hover:text-white leading-6 font-medium text-black">
-              {name}
-            </dd>
+            <dd className="leading-6 font-medium text-black">{name}</dd>
           </div>
           <div>
             <dt className="sr-only">Description</dt>
