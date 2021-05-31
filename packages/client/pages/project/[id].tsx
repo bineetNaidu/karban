@@ -38,16 +38,16 @@ const Project = () => {
           </h1>
 
           <div>
-            <button className="py-2 px-4 border-black border-1 bg-gray-600 rounded mx-2 text-white">
+            <button className="py-2 px-4 border-black border-1 bg-green-600 rounded mx-2 text-white">
               Add Card
             </button>
             <button
               onClick={handleDeleteProject}
-              className="py-2 px-4 border-black border-1 bg-gray-600 rounded mx-2 text-white"
+              className="py-2 px-4 border-black border-1 bg-red-600 rounded mx-2 text-white"
             >
               Delete
             </button>
-            <button className="py-2 px-4 border-black border-1 bg-gray-600 rounded mx-2 text-white">
+            <button className="py-2 px-4 border-black border-1 bg-blue-600 rounded mx-2 text-white">
               Edit
             </button>
           </div>
