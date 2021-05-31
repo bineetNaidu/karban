@@ -52,7 +52,7 @@ export default (passport: PassportStatic): Router => {
   router.get(
     '/callback',
     passport.authenticate('github', {
-      successReturnToOrRedirect: 'http://localhost:3000',
+      successReturnToOrRedirect: 'http://localhost:3000/dashboard',
       failureRedirect: 'http://localhost:3000',
       session: true,
     })
