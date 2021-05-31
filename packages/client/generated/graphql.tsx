@@ -208,7 +208,7 @@ export type GetProjectByIdQuery = (
       & Pick<Tab, '_id' | 'tabName'>
       & { cards?: Maybe<Array<Maybe<(
         { __typename?: 'Card' }
-        & Pick<Card, 'cardId'>
+        & Pick<Card, 'cardId' | 'cardBody'>
       )>>> }
     )>>> }
   )> }
@@ -389,6 +389,7 @@ export const GetProjectByIdDocument = gql`
       tabName
       cards {
         cardId
+        cardBody
       }
     }
   }
