@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useCreateTabMutation } from '../generated/graphql';
 import useForm from '../hooks/useForm';
 import { useProjectStore } from '../lib/project.store';
 import { withApollo } from '../lib/withApollo';
@@ -7,21 +6,22 @@ import { withApollo } from '../lib/withApollo';
 interface Props {
   open: boolean;
   toggle: () => void;
+  tabId: string | undefined | null;
 }
 
-const AddTabModal: FC<Props> = ({ open, toggle }) => {
-  const [createTab] = useCreateTabMutation();
-  const { addTab, _id } = useProjectStore();
-  const [tabName, handleTabname, resetTabname] = useForm('');
+const AddCardModal: FC<Props> = ({ open, toggle, tabId }) => {
+  const { addCard, _id } = useProjectStore();
+  const [cardBody, handleCardbody, resetCardBody] = useForm('');
 
-  const handleCreateTab = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateCard = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data } = await createTab({
-      variables: { id: _id, tabName },
-    });
-    if (data.createTab) {
-      addTab(data.createTab);
-      resetTabname();
+
+    if (true) {
+      addCard(tabId, {
+        _id: 'saas',
+        cardBody,
+      });
+      resetCardBody();
       toggle();
     }
   };
@@ -34,7 +34,7 @@ const AddTabModal: FC<Props> = ({ open, toggle }) => {
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <h3 className="text-3xl font-semibold">Add Tab</h3>
+              <h3 className="text-3xl font-semibold">Add Card</h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={toggle}
@@ -45,16 +45,21 @@ const AddTabModal: FC<Props> = ({ open, toggle }) => {
               </button>
             </div>
             {/*body*/}
-            <form className="relative p-6 flex-auto" onSubmit={handleCreateTab}>
+            <form
+              className="relative p-6 flex-auto"
+              onSubmit={handleCreateCard}
+            >
               <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                Tab name
+                Card Body
               </p>
-              <input
-                type="text"
-                onChange={handleTabname}
-                value={tabName}
+              <textarea
                 className="border border-black rounded px-2 py-1"
-              />
+                cols={30}
+                rows={5}
+                onChange={handleCardbody}
+              >
+                {cardBody}
+              </textarea>
               <button
                 className="bg-emerald-500 text-green-800 active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
@@ -70,4 +75,4 @@ const AddTabModal: FC<Props> = ({ open, toggle }) => {
   ) : null;
 };
 
-export default withApollo()(AddTabModal);
+export default withApollo()(AddCardModal);
