@@ -3,8 +3,8 @@ import { Project, Tab } from '../generated/graphql';
 
 interface IProjectStateModel extends Project {
   setProject: (payload: Project) => void;
-  addCard: (payload: Tab) => void;
-  deleteCard: (id: string) => void;
+  addTab: (payload: Tab) => void;
+  deleteTab: (id: string) => void;
   reset: () => void;
 }
 
@@ -20,8 +20,8 @@ export const useProjectStore = create<IProjectStateModel>((set) => ({
       projectName: data.projectName,
       tabs: data.tabs,
     })),
-  addCard: (data) => set((state) => ({ tabs: [...state.tabs, data] })),
-  deleteCard: (id) =>
+  addTab: (data) => set((state) => ({ tabs: [...state.tabs, data] })),
+  deleteTab: (id) =>
     set((state) => ({
       tabs: state.tabs.filter((t) => t._id !== id),
     })),

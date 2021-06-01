@@ -1,5 +1,8 @@
 import { FC } from 'react';
 import { Tab as TabType } from '../generated/graphql';
+import useToggle from '../hooks/useToggle';
+import { withApollo } from '../lib/withApollo';
+import AddTabModal from './AddTabModal';
 
 interface IProps {
   tab?: TabType;
@@ -7,13 +10,21 @@ interface IProps {
 }
 
 const Tab: FC<IProps> = ({ tab, addTab }) => {
+  const [isAddCardModalOpen, toggleAddCardModal] = useToggle(false);
+
   if (addTab) {
     return (
-      <div className="hover:shadow-lg rounded-lg cursor-pointer h-5/6">
-        <span className="hover:border-transparent hover:shadow-xs w-full flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
-          Add Tab
-        </span>
-      </div>
+      <>
+        <AddTabModal open={isAddCardModalOpen} toggle={toggleAddCardModal} />
+        <div
+          className="hover:shadow-lg rounded-lg cursor-pointer h-5/6"
+          onClick={toggleAddCardModal}
+        >
+          <span className="hover:border-transparent hover:shadow-xs w-full flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
+            Add Tab
+          </span>
+        </div>
+      </>
     );
   }
 
@@ -31,4 +42,4 @@ const Tab: FC<IProps> = ({ tab, addTab }) => {
   );
 };
 
-export default Tab;
+export default withApollo()(Tab);
