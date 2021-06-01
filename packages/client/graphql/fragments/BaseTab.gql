@@ -1,0 +1,8 @@
+fragment BaseTab on Tab {
+  _id
+  tabName
+  cards {
+    _id
+    cardBody
+  }
+}

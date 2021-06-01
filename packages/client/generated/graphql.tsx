@@ -24,7 +24,7 @@ export enum CacheControlScope {
 
 export type Card = {
   __typename?: 'Card';
-  cardId: Scalars['String'];
+  _id: Scalars['ID'];
   cardBody?: Maybe<Scalars['String']>;
 };
 
@@ -127,6 +127,28 @@ export type User = {
   projects?: Maybe<Array<Maybe<Project>>>;
 };
 
+export type BaseProjectFragment = (
+  { __typename?: 'Project' }
+  & Pick<Project, '_id' | 'projectName' | 'projectDescription'>
+  & { tabs?: Maybe<Array<Maybe<(
+    { __typename?: 'Tab' }
+    & Pick<Tab, '_id' | 'tabName'>
+    & { cards?: Maybe<Array<Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, '_id' | 'cardBody'>
+    )>>> }
+  )>>> }
+);
+
+export type BaseTabFragment = (
+  { __typename?: 'Tab' }
+  & Pick<Tab, '_id' | 'tabName'>
+  & { cards?: Maybe<Array<Maybe<(
+    { __typename?: 'Card' }
+    & Pick<Card, '_id' | 'cardBody'>
+  )>>> }
+);
+
 export type CreateProjectMutationVariables = Exact<{
   projectName: Scalars['String'];
   projectDescription: Scalars['String'];
@@ -137,11 +159,7 @@ export type CreateProjectMutation = (
   { __typename?: 'Mutation' }
   & { createProject?: Maybe<(
     { __typename?: 'Project' }
-    & Pick<Project, '_id' | 'projectName' | 'projectDescription'>
-    & { tabs?: Maybe<Array<Maybe<(
-      { __typename?: 'Tab' }
-      & Pick<Tab, '_id' | 'tabName'>
-    )>>> }
+    & BaseProjectFragment
   )> }
 );
 
@@ -155,11 +173,7 @@ export type CreateTabMutation = (
   { __typename?: 'Mutation' }
   & { createTab?: Maybe<(
     { __typename?: 'Tab' }
-    & Pick<Tab, '_id' | 'tabName'>
-    & { cards?: Maybe<Array<Maybe<(
-      { __typename?: 'Card' }
-      & Pick<Card, 'cardId' | 'cardBody'>
-    )>>> }
+    & BaseTabFragment
   )> }
 );
 
@@ -184,11 +198,7 @@ export type UpdateProjectMutation = (
   { __typename?: 'Mutation' }
   & { updateProject?: Maybe<(
     { __typename?: 'Project' }
-    & Pick<Project, '_id' | 'projectName' | 'projectDescription'>
-    & { tabs?: Maybe<Array<Maybe<(
-      { __typename?: 'Tab' }
-      & Pick<Tab, '_id' | 'tabName'>
-    )>>> }
+    & BaseProjectFragment
   )> }
 );
 
@@ -220,35 +230,45 @@ export type GetProjectByIdQuery = (
   { __typename?: 'Query' }
   & { getProjectById?: Maybe<(
     { __typename?: 'Project' }
-    & Pick<Project, '_id' | 'projectName' | 'projectDescription'>
-    & { tabs?: Maybe<Array<Maybe<(
-      { __typename?: 'Tab' }
-      & Pick<Tab, '_id' | 'tabName'>
-      & { cards?: Maybe<Array<Maybe<(
-        { __typename?: 'Card' }
-        & Pick<Card, 'cardId' | 'cardBody'>
-      )>>> }
-    )>>> }
+    & BaseProjectFragment
   )> }
 );
 
-
+export const BaseProjectFragmentDoc = gql`
+    fragment BaseProject on Project {
+  _id
+  projectName
+  projectDescription
+  tabs {
+    _id
+    tabName
+    cards {
+      _id
+      cardBody
+    }
+  }
+}
+    `;
+export const BaseTabFragmentDoc = gql`
+    fragment BaseTab on Tab {
+  _id
+  tabName
+  cards {
+    _id
+    cardBody
+  }
+}
+    `;
 export const CreateProjectDocument = gql`
     mutation CreateProject($projectName: String!, $projectDescription: String!) {
   createProject(
     projectName: $projectName
     projectDescription: $projectDescription
   ) {
-    _id
-    projectName
-    projectDescription
-    tabs {
-      _id
-      tabName
-    }
+    ...BaseProject
   }
 }
-    `;
+    ${BaseProjectFragmentDoc}`;
 export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
 
 /**
@@ -279,15 +299,10 @@ export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProj
 export const CreateTabDocument = gql`
     mutation CreateTab($id: ID!, $tabName: String!) {
   createTab(projectId: $id, tabName: $tabName) {
-    _id
-    tabName
-    cards {
-      cardId
-      cardBody
-    }
+    ...BaseTab
   }
 }
-    `;
+    ${BaseTabFragmentDoc}`;
 export type CreateTabMutationFn = Apollo.MutationFunction<CreateTabMutation, CreateTabMutationVariables>;
 
 /**
@@ -352,16 +367,10 @@ export const UpdateProjectDocument = gql`
     id: $id
     data: {projectName: $projectName, projectDescription: $projectDescription}
   ) {
-    _id
-    projectName
-    projectDescription
-    tabs {
-      _id
-      tabName
-    }
+    ...BaseProject
   }
 }
-    `;
+    ${BaseProjectFragmentDoc}`;
 export type UpdateProjectMutationFn = Apollo.MutationFunction<UpdateProjectMutation, UpdateProjectMutationVariables>;
 
 /**
@@ -438,20 +447,10 @@ export type AuthenticatedUserQueryResult = Apollo.QueryResult<AuthenticatedUserQ
 export const GetProjectByIdDocument = gql`
     query GetProjectById($id: ID!) {
   getProjectById(id: $id) {
-    _id
-    projectName
-    projectDescription
-    tabs {
-      _id
-      tabName
-      cards {
-        cardId
-        cardBody
-      }
-    }
+    ...BaseProject
   }
 }
-    `;
+    ${BaseProjectFragmentDoc}`;
 
 /**
  * __useGetProjectByIdQuery__

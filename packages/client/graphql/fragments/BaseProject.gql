@@ -1,0 +1,13 @@
+fragment BaseProject on Project {
+  _id
+  projectName
+  projectDescription
+  tabs {
+    _id
+    tabName
+    cards {
+      _id
+      cardBody
+    }
+  }
+}

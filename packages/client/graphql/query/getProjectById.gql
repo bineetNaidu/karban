@@ -1,15 +1,5 @@
 query GetProjectById($id: ID!) {
   getProjectById(id: $id) {
-    _id
-    projectName
-    projectDescription
-    tabs {
-      _id
-      tabName
-      cards {
-        cardId
-        cardBody
-      }
-    }
+    ...BaseProject
   }
 }
