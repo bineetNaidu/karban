@@ -56,5 +56,6 @@ export const typeDefs = gql`
     updateTab(projectId: ID!, data: TabUpdateDataInput): Tab
     deleteTab(projectId: ID!, tabId: ID!): Boolean
     createCard(projectId: ID!, tabId: ID!, cardBody: String!): [Card]
+    deleteCard(projectId: ID!, tabId: ID!, cardId: ID!): Boolean
   }
 `;
