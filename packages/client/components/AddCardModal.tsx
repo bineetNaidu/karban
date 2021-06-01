@@ -10,13 +10,13 @@ interface Props {
 }
 
 const AddCardModal: FC<Props> = ({ open, toggle, tabId }) => {
-  const { addCard, _id } = useProjectStore();
+  const { addCard } = useProjectStore();
   const [cardBody, handleCardbody, resetCardBody] = useForm('');
 
   const handleCreateCard = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (true) {
+    if (true && tabId !== (undefined || null)) {
       addCard(tabId, {
         _id: 'saas',
         cardBody,

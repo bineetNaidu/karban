@@ -13,7 +13,6 @@ interface IProps {
 const Tab: FC<IProps> = ({ tab, addTab }) => {
   const [isAddTabModalOpen, toggleAddTabModal] = useToggle(false);
   const [isAddCardModalOpen, toggleAddCardModal] = useToggle(false);
-  console.log(tab);
 
   if (addTab) {
     return (
@@ -46,11 +45,13 @@ const Tab: FC<IProps> = ({ tab, addTab }) => {
         </div>
         <hr />
         <div>
-          {tab.cards.map((c) => {
-            <div key={c._id}>
-              <p>{c.cardBody}</p>
-            </div>;
-          })}
+          {!tab
+            ? null
+            : tab.cards.map((c) => (
+                <div key={c._id}>
+                  <p>{c.cardBody}</p>
+                </div>
+              ))}
         </div>
       </div>
     </>
