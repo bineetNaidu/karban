@@ -8,6 +8,7 @@ import {
 import { withApollo } from '../../lib/withApollo';
 import { useProjectStore } from '../../lib/project.store';
 import { useEffect } from 'react';
+import Tab from '../../components/Tab';
 
 const Project = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const Project = () => {
     return () => {
       unsub;
     };
-  }, []);
+  }, [loading]);
 
   const handleDeleteProject = async () => {
     const id = data.getProjectById._id;
@@ -53,9 +54,6 @@ const Project = () => {
           <h1 className="text-4xl font-bold uppercase flex-1">{projectName}</h1>
 
           <div>
-            <button className="py-2 px-4 border-black border-1 bg-green-600 rounded mx-2 text-white">
-              Add Card
-            </button>
             <button
               onClick={handleDeleteProject}
               className="py-2 px-4 border-black border-1 bg-red-600 rounded mx-2 text-white"
@@ -70,19 +68,11 @@ const Project = () => {
 
         <hr />
 
-        <section className="flex">
-          {tabs.map((p) => (
-            <div key={p._id}>
-              <h1>{p.tabName}</h1>
-              <div>
-                {p.cards.map((c) => {
-                  <div key={c.cardId}>
-                    <p>{c.cardBody}</p>
-                  </div>;
-                })}
-              </div>
-            </div>
+        <section className="grid grid-cols-4">
+          {tabs.map((t) => (
+            <Tab key={t._id} tab={t} />
           ))}
+          <Tab addTab />
         </section>
       </div>
     </div>
