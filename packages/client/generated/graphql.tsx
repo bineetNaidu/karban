@@ -145,6 +145,24 @@ export type CreateProjectMutation = (
   )> }
 );
 
+export type CreateTabMutationVariables = Exact<{
+  id: Scalars['ID'];
+  tabName: Scalars['String'];
+}>;
+
+
+export type CreateTabMutation = (
+  { __typename?: 'Mutation' }
+  & { createTab?: Maybe<(
+    { __typename?: 'Tab' }
+    & Pick<Tab, '_id' | 'tabName'>
+    & { cards?: Maybe<Array<Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'cardId' | 'cardBody'>
+    )>>> }
+  )> }
+);
+
 export type DeleteProjectMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -258,6 +276,45 @@ export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
+export const CreateTabDocument = gql`
+    mutation CreateTab($id: ID!, $tabName: String!) {
+  createTab(projectId: $id, tabName: $tabName) {
+    _id
+    tabName
+    cards {
+      cardId
+      cardBody
+    }
+  }
+}
+    `;
+export type CreateTabMutationFn = Apollo.MutationFunction<CreateTabMutation, CreateTabMutationVariables>;
+
+/**
+ * __useCreateTabMutation__
+ *
+ * To run a mutation, you first call `useCreateTabMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTabMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTabMutation, { data, loading, error }] = useCreateTabMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      tabName: // value for 'tabName'
+ *   },
+ * });
+ */
+export function useCreateTabMutation(baseOptions?: Apollo.MutationHookOptions<CreateTabMutation, CreateTabMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTabMutation, CreateTabMutationVariables>(CreateTabDocument, options);
+      }
+export type CreateTabMutationHookResult = ReturnType<typeof useCreateTabMutation>;
+export type CreateTabMutationResult = Apollo.MutationResult<CreateTabMutation>;
+export type CreateTabMutationOptions = Apollo.BaseMutationOptions<CreateTabMutation, CreateTabMutationVariables>;
 export const DeleteProjectDocument = gql`
     mutation DeleteProject($id: ID!) {
   deleteProject(id: $id)

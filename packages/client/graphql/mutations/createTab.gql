@@ -1,0 +1,10 @@
+mutation CreateTab($id: ID!, $tabName: String!) {
+  createTab(projectId: $id, tabName: $tabName) {
+    _id
+    tabName
+    cards {
+      cardId
+      cardBody
+    }
+  }
+}
