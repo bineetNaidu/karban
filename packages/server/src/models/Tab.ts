@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { StringAndRequired } from './utils';
 
 type Card = {
+  _id?: string;
   cardBody?: string;
 };
 
@@ -12,7 +13,7 @@ export interface TabDoc extends mongoose.Document {
 
 interface TabModel extends mongoose.Model<TabDoc> {
   build(data: { tabName: string }): TabDoc;
-  buildCard(data: { cardId: string; cardBody: string }): Card[];
+  buildCard(data: { cardBody: string }): Card[];
 }
 
 const TabSchema = new mongoose.Schema<TabDoc, TabModel>({

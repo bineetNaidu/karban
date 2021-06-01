@@ -4,6 +4,7 @@ import { deleteProject } from './deleteProject';
 import { createTab } from './createTab';
 import { updateTab } from './updateTab';
 import { deleteTab } from './deleteTab';
+import { createCard } from './createCard';
 
 export const Mutation: any = {
   createProject,
@@ -12,4 +13,5 @@ export const Mutation: any = {
   createTab,
   updateTab,
   deleteTab,
+  createCard,
 };
