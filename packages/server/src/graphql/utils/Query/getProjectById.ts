@@ -5,7 +5,7 @@ export const getProjectById: Promise<ProjectDoc | null> = async (
   _parent: any,
   args: { id: string }
 ) => {
-  const project = await Project.findOne({ _id: args.id });
+  const project = await Project.findOne({ _id: args.id }).populate('tabs');
   if (!project) {
     return null;
   }

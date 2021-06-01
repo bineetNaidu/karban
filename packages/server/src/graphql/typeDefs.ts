@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   type Card {
-    cardId: String!
+    _id: ID!
     cardBody: String
   }
 

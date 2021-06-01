@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { StringAndRequiredAndUnique, StringAndRequired } from './utils';
+import { StringAndRequired } from './utils';
 
 type Card = {
-  cardId: string;
   cardBody?: string;
 };
 
@@ -20,8 +19,6 @@ const TabSchema = new mongoose.Schema<TabDoc, TabModel>({
   tabName: StringAndRequired,
   cards: [
     {
-      _id: false,
-      cardId: StringAndRequiredAndUnique,
       cardBody: String,
     },
   ],
@@ -34,10 +31,7 @@ TabSchema.statics.build = (data: { tabName: string }) => {
   });
 };
 
-TabSchema.statics.buildCard = async function (data: {
-  cardId: string;
-  cardBody: string;
-}) {
+TabSchema.statics.buildCard = async function (data: { cardBody: string }) {
   const Tab = await this.findOne({});
   if (!Tab) {
     throw new Error('Tab Not Found');
