@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { Tab as TabType } from '../generated/graphql';
+import { Tab as TabType, useDeleteCardMutation } from '../generated/graphql';
 import useToggle from '../hooks/useToggle';
+import { useProjectStore } from '../lib/project.store';
 import AddCardModal from './AddCardModal';
 import AddTabModal from './AddTabModal';
 
@@ -12,6 +13,8 @@ interface IProps {
 const Tab: FC<IProps> = ({ tab, addTab }) => {
   const [isAddTabModalOpen, toggleAddTabModal] = useToggle(false);
   const [isAddCardModalOpen, toggleAddCardModal] = useToggle(false);
+  const [deleteCard] = useDeleteCardMutation();
+  const { _id } = useProjectStore();
 
   if (addTab) {
     return (
@@ -21,7 +24,7 @@ const Tab: FC<IProps> = ({ tab, addTab }) => {
           className="hover:shadow-lg rounded-lg cursor-pointer"
           onClick={toggleAddTabModal}
         >
-          <span className="hover:border-transparent hover:shadow-xs w-full flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
+          <span className="hover:border-transparent hover:shadow-xs w-full h-full flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
             Add Tab
           </span>
         </div>
@@ -47,8 +50,26 @@ const Tab: FC<IProps> = ({ tab, addTab }) => {
           {!tab
             ? null
             : tab.cards.map((c) => (
-                <div key={c._id}>
+                <div
+                  key={c._id}
+                  className="relative bg-gray-200 px-2 py-1 my-1 rounded h-20 group"
+                >
                   <p>{c.cardBody}</p>
+
+                  <button
+                    className="absolute top-0 right-0 bg-red-400 px-2 py-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-all"
+                    onClick={async () =>
+                      await deleteCard({
+                        variables: {
+                          cardId: c._id,
+                          projectId: _id,
+                          tabId: tab._id,
+                        },
+                      })
+                    }
+                  >
+                    X
+                  </button>
                 </div>
               ))}
         </div>
