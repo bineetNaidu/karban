@@ -1,7 +1,6 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Tab as TabType } from '../generated/graphql';
 import useToggle from '../hooks/useToggle';
-import { withApollo } from '../lib/withApollo';
 import AddCardModal from './AddCardModal';
 import AddTabModal from './AddTabModal';
 
@@ -35,7 +34,7 @@ const Tab: FC<IProps> = ({ tab, addTab }) => {
       <AddCardModal
         open={isAddCardModalOpen}
         toggle={toggleAddCardModal}
-        tab={tab._id}
+        tabId={tab._id}
       />
       <div className="border-2 border-gray-200 border-dashed px-4 py-2 rounded mx-4">
         <div className="flex justify-between">
@@ -58,4 +57,4 @@ const Tab: FC<IProps> = ({ tab, addTab }) => {
   );
 };
 
-export default withApollo()(Tab);
+export default Tab;

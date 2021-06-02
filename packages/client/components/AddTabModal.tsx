@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { useCreateTabMutation } from '../generated/graphql';
 import useForm from '../hooks/useForm';
 import { useProjectStore } from '../lib/project.store';
-import { withApollo } from '../lib/withApollo';
 
 interface Props {
   open: boolean;
@@ -70,4 +69,4 @@ const AddTabModal: FC<Props> = ({ open, toggle }) => {
   ) : null;
 };
 
-export default withApollo()(AddTabModal);
+export default AddTabModal;

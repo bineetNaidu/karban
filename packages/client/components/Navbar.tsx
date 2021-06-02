@@ -1,6 +1,5 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
-import { withApollo } from '../lib/withApollo';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
 import HamburgerMenu from './HamburgerMenu';
 
@@ -94,4 +93,4 @@ const Navbar: FC = () => {
   );
 };
 
-export default withApollo({ ssr: false })(Navbar);
+export default Navbar;

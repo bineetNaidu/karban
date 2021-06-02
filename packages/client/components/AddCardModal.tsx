@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import useForm from '../hooks/useForm';
 import { useProjectStore } from '../lib/project.store';
-import { withApollo } from '../lib/withApollo';
 
 interface Props {
   open: boolean;
@@ -75,4 +74,4 @@ const AddCardModal: FC<Props> = ({ open, toggle, tabId }) => {
   ) : null;
 };
 
-export default withApollo()(AddCardModal);
+export default AddCardModal;
