@@ -1,12 +1,16 @@
 import create from 'zustand';
 import { Card, Project, Tab } from '../generated/graphql';
 
-interface IProjectStateModel extends Project {
+interface IProjectStateModel {
+  tabs: any[];
+  _id?: string;
+  projectDescription?: string;
+  projectName?: string;
   setProject: (payload: Project) => void;
   addTab: (payload: Tab) => void;
   deleteTab: (id: string) => void;
   reset: () => void;
-  addCard: (tabId: string, data: Card) => void;
+  setCard: (tabId: string, data: Card[]) => void;
 }
 
 export const useProjectStore = create<IProjectStateModel>((set) => ({
@@ -33,14 +37,21 @@ export const useProjectStore = create<IProjectStateModel>((set) => ({
       tabs: [],
       _id: '',
     })),
-  addCard: (tabId, data) =>
+  setCard: (tabId, data) =>
     set((state) => {
-      const updatedTab = state.tabs.find((t) => t._id === tabId);
-
-      updatedTab.cards.push(data);
-
       return {
-        tabs: [...state.tabs, updatedTab],
+        tabs: state.tabs.map((t) => {
+          if (t._id === tabId) {
+            t.cards.push({
+              _id: 'dsa',
+              __typename: 'Card',
+              cardBody: 'bineet',
+            });
+
+            return t;
+          }
+          return t;
+        }),
       };
     }),
 }));

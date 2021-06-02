@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useCreateCardMutation } from '../generated/graphql';
 import useForm from '../hooks/useForm';
 import { useProjectStore } from '../lib/project.store';
 
@@ -9,17 +10,19 @@ interface Props {
 }
 
 const AddCardModal: FC<Props> = ({ open, toggle, tabId }) => {
-  const { addCard } = useProjectStore();
+  const { _id, setCard } = useProjectStore();
+  const [createCard] = useCreateCardMutation();
   const [cardBody, handleCardbody, resetCardBody] = useForm('');
 
   const handleCreateCard = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (true && tabId !== (undefined || null)) {
-      addCard(tabId, {
-        _id: 'saas',
-        cardBody,
+    if (true && tabId) {
+      const { data } = await createCard({
+        variables: { cardBody, projectId: _id, tabId },
       });
+      // console.log(data);
+      // setCard(tabId, data.createCard);
       resetCardBody();
       toggle();
     }
@@ -56,9 +59,8 @@ const AddCardModal: FC<Props> = ({ open, toggle, tabId }) => {
                 cols={30}
                 rows={5}
                 onChange={handleCardbody}
-              >
-                {cardBody}
-              </textarea>
+                value={cardBody}
+              ></textarea>
               <button
                 className="bg-emerald-500 text-green-800 active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
