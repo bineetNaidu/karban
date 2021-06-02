@@ -36,6 +36,8 @@ export type Mutation = {
   createTab?: Maybe<Tab>;
   updateTab?: Maybe<Tab>;
   deleteTab?: Maybe<Scalars['Boolean']>;
+  createCard?: Maybe<Array<Maybe<Card>>>;
+  deleteCard?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -71,6 +73,20 @@ export type MutationUpdateTabArgs = {
 export type MutationDeleteTabArgs = {
   projectId: Scalars['ID'];
   tabId: Scalars['ID'];
+};
+
+
+export type MutationCreateCardArgs = {
+  projectId: Scalars['ID'];
+  tabId: Scalars['ID'];
+  cardBody: Scalars['String'];
+};
+
+
+export type MutationDeleteCardArgs = {
+  projectId: Scalars['ID'];
+  tabId: Scalars['ID'];
+  cardId: Scalars['ID'];
 };
 
 export type Project = {
@@ -144,6 +160,21 @@ export type BaseTabFragment = (
   { __typename?: 'Tab' }
   & Pick<Tab, '_id' | 'tabName'>
   & { cards?: Maybe<Array<Maybe<(
+    { __typename?: 'Card' }
+    & Pick<Card, '_id' | 'cardBody'>
+  )>>> }
+);
+
+export type CreateCardMutationVariables = Exact<{
+  projectId: Scalars['ID'];
+  tabId: Scalars['ID'];
+  cardBody: Scalars['String'];
+}>;
+
+
+export type CreateCardMutation = (
+  { __typename?: 'Mutation' }
+  & { createCard?: Maybe<Array<Maybe<(
     { __typename?: 'Card' }
     & Pick<Card, '_id' | 'cardBody'>
   )>>> }
@@ -259,6 +290,42 @@ export const BaseTabFragmentDoc = gql`
   }
 }
     `;
+export const CreateCardDocument = gql`
+    mutation CreateCard($projectId: ID!, $tabId: ID!, $cardBody: String!) {
+  createCard(projectId: $projectId, tabId: $tabId, cardBody: $cardBody) {
+    _id
+    cardBody
+  }
+}
+    `;
+export type CreateCardMutationFn = Apollo.MutationFunction<CreateCardMutation, CreateCardMutationVariables>;
+
+/**
+ * __useCreateCardMutation__
+ *
+ * To run a mutation, you first call `useCreateCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCardMutation, { data, loading, error }] = useCreateCardMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      tabId: // value for 'tabId'
+ *      cardBody: // value for 'cardBody'
+ *   },
+ * });
+ */
+export function useCreateCardMutation(baseOptions?: Apollo.MutationHookOptions<CreateCardMutation, CreateCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCardMutation, CreateCardMutationVariables>(CreateCardDocument, options);
+      }
+export type CreateCardMutationHookResult = ReturnType<typeof useCreateCardMutation>;
+export type CreateCardMutationResult = Apollo.MutationResult<CreateCardMutation>;
+export type CreateCardMutationOptions = Apollo.BaseMutationOptions<CreateCardMutation, CreateCardMutationVariables>;
 export const CreateProjectDocument = gql`
     mutation CreateProject($projectName: String!, $projectDescription: String!) {
   createProject(
