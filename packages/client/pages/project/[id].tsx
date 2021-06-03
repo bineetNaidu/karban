@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import Navbar from '../../components/Navbar';
 import Spinner from '../../components/Spinner';
 import {
   useDeleteProjectMutation,
@@ -10,6 +9,7 @@ import { useProjectStore } from '../../lib/project.store';
 import { useEffect } from 'react';
 import { Card } from '../../components/Card';
 import CreateCard from '../../components/CreateCard';
+import Wrapper from '../../components/Wrapper';
 
 const Project = () => {
   const router = useRouter();
@@ -44,9 +44,7 @@ const Project = () => {
   };
 
   return (
-    <div>
-      <Navbar />
-
+    <Wrapper>
       <div className="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4 w-4/6 m-auto">
         <header className="flex">
           <h1 className="text-4xl font-bold uppercase flex-1">
@@ -68,7 +66,7 @@ const Project = () => {
 
         <hr />
 
-        <section className="grid grid-cols-4">
+        <section className="grid grid-cols-4 space-x-4">
           {data.getProjectById.cards.map((c) =>
             !c ? null : (
               <Card projectId={data.getProjectById._id} card={c} key={c._id} />
@@ -77,7 +75,7 @@ const Project = () => {
           <CreateCard projectId={data.getProjectById._id} />
         </section>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 

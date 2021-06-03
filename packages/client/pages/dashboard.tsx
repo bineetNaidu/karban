@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import Link from 'next/link';
-import Navbar from '../components/Navbar';
 import ProjectCard from '../components/ProjectCard';
 import { withApollo } from '../lib/withApollo';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
 import Spinner from '../components/Spinner';
+import Wrapper from '../components/Wrapper';
 
 const dashboard: FC = () => {
   const { data, loading } = useAuthenticatedUserQuery();
@@ -13,27 +13,12 @@ const dashboard: FC = () => {
   }
 
   return (
-    <div>
-      <Navbar />
-
+    <Wrapper>
       <section className="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4 w-4/6 m-auto">
         <header className="flex items-center justify-between">
-          <h2 className="text-lg leading-6 font-medium text-black">Projects</h2>
-          <button className="hover:bg-light-blue-200 hover:text-light-blue-800 group flex items-center rounded-md bg-light-blue-100 text-light-blue-600 text-sm font-medium px-4 py-2">
-            <svg
-              className="group-hover:text-light-blue-600 text-light-blue-500 mr-2"
-              width="12"
-              height="20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M6 5a1 1 0 011 1v3h3a1 1 0 110 2H7v3a1 1 0 11-2 0v-3H2a1 1 0 110-2h3V6a1 1 0 011-1z"
-              />
-            </svg>
-            New
-          </button>
+          <h2 className="text-lg leading-6 font-medium text-black">
+            Your Projects
+          </h2>
         </header>
         <form className="relative">
           <svg
@@ -71,14 +56,14 @@ const dashboard: FC = () => {
           )}
           <Link href="/new">
             <li className="hover:shadow-lg flex rounded-lg cursor-pointer">
-              <span className="hover:border-transparent hover:shadow-xs w-full flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
+              <span className="hover:border-transparent hover:shadow-xs w-full hover:bg-blue-100 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
                 New Project
               </span>
             </li>
           </Link>
         </ul>
       </section>
-    </div>
+    </Wrapper>
   );
 };
 
