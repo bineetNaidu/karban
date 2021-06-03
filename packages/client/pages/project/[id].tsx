@@ -9,6 +9,7 @@ import { withApollo } from '../../lib/withApollo';
 import { useProjectStore } from '../../lib/project.store';
 import { useEffect } from 'react';
 import { Card } from '../../components/Card';
+import CreateCard from '../../components/CreateCard';
 
 const Project = () => {
   const router = useRouter();
@@ -73,6 +74,7 @@ const Project = () => {
               <Card projectId={data.getProjectById._id} card={c} key={c._id} />
             )
           )}
+          <CreateCard projectId={data.getProjectById._id} />
         </section>
       </div>
     </div>
