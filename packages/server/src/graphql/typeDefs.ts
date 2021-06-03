@@ -32,7 +32,7 @@ export const typeDefs = gql`
     projectDescription: String
   }
 
-  input CreateCardInput {
+  input CardInput {
     category: String
     body: String
   }
@@ -42,6 +42,8 @@ export const typeDefs = gql`
     createProject(projectName: String!, projectDescription: String!): Project
     updateProject(id: ID!, data: ProjectUpdateDataInput): Project
     deleteProject(id: ID!): Boolean
-    createCard(projectId: ID!, input: CreateCardInput): Card
+    createCard(projectId: ID!, input: CardInput): Card
+    updateCard(projectId: ID!, cardId: ID!, input: CardInput): Card
+    deleteCard(projectId: ID!, cardId: ID!): Boolean
   }
 `;
