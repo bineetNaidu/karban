@@ -1,0 +1,5 @@
+fragment BaseCard on Card {
+  _id
+  category
+  body
+}

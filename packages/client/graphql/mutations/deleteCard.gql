@@ -1,3 +1,3 @@
-mutation DeleteCard($projectId: ID!, $tabId: ID!, $cardId: ID!) {
-  deleteCard(projectId: $projectId, tabId: $tabId, cardId: $cardId)
+mutation DeleteCard($projectId: ID!, $cardId: ID!) {
+  deleteCard(projectId: $projectId, cardId: $cardId)
 }

@@ -1,5 +1,0 @@
-mutation CreateTab($id: ID!, $tabName: String!) {
-  createTab(projectId: $id, tabName: $tabName) {
-    ...BaseTab
-  }
-}

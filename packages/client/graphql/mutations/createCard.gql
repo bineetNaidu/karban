@@ -1,6 +1,5 @@
-mutation CreateCard($projectId: ID!, $tabId: ID!, $cardBody: String!) {
-  createCard(projectId: $projectId, tabId: $tabId, cardBody: $cardBody) {
-    _id
-    cardBody
+mutation CreateCard($projectId: ID!, $input: CardInput!) {
+  createCard(projectId: $projectId, input: $input) {
+    ...BaseCard
   }
 }

@@ -1,0 +1,5 @@
+mutation UpdateCard($projectId: ID!, $cardId: ID!, $input: CardInput!) {
+  updateCard(projectId: $projectId, cardId: $cardId, input: $input) {
+    ...BaseCard
+  }
+}

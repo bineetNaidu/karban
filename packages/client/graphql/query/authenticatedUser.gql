@@ -6,9 +6,9 @@ query AuthenticatedUser {
     githubId
     projects {
       _id
-      projectDescription
       projectName
-      tabs {
+      projectDescription
+      cards {
         _id
       }
     }

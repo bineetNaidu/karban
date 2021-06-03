@@ -25,7 +25,13 @@ export enum CacheControlScope {
 export type Card = {
   __typename?: 'Card';
   _id: Scalars['ID'];
-  cardBody?: Maybe<Scalars['String']>;
+  category: Scalars['String'];
+  body?: Maybe<Scalars['String']>;
+};
+
+export type CardInput = {
+  category?: Maybe<Scalars['String']>;
+  body?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -33,10 +39,8 @@ export type Mutation = {
   createProject?: Maybe<Project>;
   updateProject?: Maybe<Project>;
   deleteProject?: Maybe<Scalars['Boolean']>;
-  createTab?: Maybe<Tab>;
-  updateTab?: Maybe<Tab>;
-  deleteTab?: Maybe<Scalars['Boolean']>;
-  createCard?: Maybe<Array<Maybe<Card>>>;
+  createCard?: Maybe<Card>;
+  updateCard?: Maybe<Card>;
   deleteCard?: Maybe<Scalars['Boolean']>;
 };
 
@@ -58,34 +62,21 @@ export type MutationDeleteProjectArgs = {
 };
 
 
-export type MutationCreateTabArgs = {
-  projectId: Scalars['ID'];
-  tabName: Scalars['String'];
-};
-
-
-export type MutationUpdateTabArgs = {
-  projectId: Scalars['ID'];
-  data?: Maybe<TabUpdateDataInput>;
-};
-
-
-export type MutationDeleteTabArgs = {
-  projectId: Scalars['ID'];
-  tabId: Scalars['ID'];
-};
-
-
 export type MutationCreateCardArgs = {
   projectId: Scalars['ID'];
-  tabId: Scalars['ID'];
-  cardBody: Scalars['String'];
+  input?: Maybe<CardInput>;
+};
+
+
+export type MutationUpdateCardArgs = {
+  projectId: Scalars['ID'];
+  cardId: Scalars['ID'];
+  input?: Maybe<CardInput>;
 };
 
 
 export type MutationDeleteCardArgs = {
   projectId: Scalars['ID'];
-  tabId: Scalars['ID'];
   cardId: Scalars['ID'];
 };
 
@@ -94,7 +85,7 @@ export type Project = {
   _id?: Maybe<Scalars['ID']>;
   projectName: Scalars['String'];
   projectDescription: Scalars['String'];
-  tabs?: Maybe<Array<Maybe<Tab>>>;
+  cards?: Maybe<Array<Maybe<Card>>>;
 };
 
 export type ProjectUpdateDataInput = {
@@ -105,32 +96,12 @@ export type ProjectUpdateDataInput = {
 export type Query = {
   __typename?: 'Query';
   authenticatedUser?: Maybe<User>;
-  allProjects?: Maybe<Array<Maybe<Project>>>;
-  allUsers?: Maybe<Array<Maybe<User>>>;
   getProjectById?: Maybe<Project>;
-  getTabById?: Maybe<Tab>;
 };
 
 
 export type QueryGetProjectByIdArgs = {
   id: Scalars['ID'];
-};
-
-
-export type QueryGetTabByIdArgs = {
-  id: Scalars['ID'];
-};
-
-export type Tab = {
-  __typename?: 'Tab';
-  _id?: Maybe<Scalars['ID']>;
-  tabName: Scalars['String'];
-  cards?: Maybe<Array<Maybe<Card>>>;
-};
-
-export type TabUpdateDataInput = {
-  tabName?: Maybe<Scalars['String']>;
-  tabId: Scalars['String'];
 };
 
 
@@ -143,41 +114,32 @@ export type User = {
   projects?: Maybe<Array<Maybe<Project>>>;
 };
 
+export type BaseCardFragment = (
+  { __typename?: 'Card' }
+  & Pick<Card, '_id' | 'category' | 'body'>
+);
+
 export type BaseProjectFragment = (
   { __typename?: 'Project' }
   & Pick<Project, '_id' | 'projectName' | 'projectDescription'>
-  & { tabs?: Maybe<Array<Maybe<(
-    { __typename?: 'Tab' }
-    & Pick<Tab, '_id' | 'tabName'>
-    & { cards?: Maybe<Array<Maybe<(
-      { __typename?: 'Card' }
-      & Pick<Card, '_id' | 'cardBody'>
-    )>>> }
-  )>>> }
-);
-
-export type BaseTabFragment = (
-  { __typename?: 'Tab' }
-  & Pick<Tab, '_id' | 'tabName'>
   & { cards?: Maybe<Array<Maybe<(
     { __typename?: 'Card' }
-    & Pick<Card, '_id' | 'cardBody'>
+    & BaseCardFragment
   )>>> }
 );
 
 export type CreateCardMutationVariables = Exact<{
   projectId: Scalars['ID'];
-  tabId: Scalars['ID'];
-  cardBody: Scalars['String'];
+  input: CardInput;
 }>;
 
 
 export type CreateCardMutation = (
   { __typename?: 'Mutation' }
-  & { createCard?: Maybe<Array<Maybe<(
+  & { createCard?: Maybe<(
     { __typename?: 'Card' }
-    & Pick<Card, '_id' | 'cardBody'>
-  )>>> }
+    & BaseCardFragment
+  )> }
 );
 
 export type CreateProjectMutationVariables = Exact<{
@@ -194,23 +156,8 @@ export type CreateProjectMutation = (
   )> }
 );
 
-export type CreateTabMutationVariables = Exact<{
-  id: Scalars['ID'];
-  tabName: Scalars['String'];
-}>;
-
-
-export type CreateTabMutation = (
-  { __typename?: 'Mutation' }
-  & { createTab?: Maybe<(
-    { __typename?: 'Tab' }
-    & BaseTabFragment
-  )> }
-);
-
 export type DeleteCardMutationVariables = Exact<{
   projectId: Scalars['ID'];
-  tabId: Scalars['ID'];
   cardId: Scalars['ID'];
 }>;
 
@@ -228,6 +175,21 @@ export type DeleteProjectMutationVariables = Exact<{
 export type DeleteProjectMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteProject'>
+);
+
+export type UpdateCardMutationVariables = Exact<{
+  projectId: Scalars['ID'];
+  cardId: Scalars['ID'];
+  input: CardInput;
+}>;
+
+
+export type UpdateCardMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCard?: Maybe<(
+    { __typename?: 'Card' }
+    & BaseCardFragment
+  )> }
 );
 
 export type UpdateProjectMutationVariables = Exact<{
@@ -255,10 +217,10 @@ export type AuthenticatedUserQuery = (
     & Pick<User, '_id' | 'username' | 'avatar' | 'githubId'>
     & { projects?: Maybe<Array<Maybe<(
       { __typename?: 'Project' }
-      & Pick<Project, '_id' | 'projectDescription' | 'projectName'>
-      & { tabs?: Maybe<Array<Maybe<(
-        { __typename?: 'Tab' }
-        & Pick<Tab, '_id'>
+      & Pick<Project, '_id' | 'projectName' | 'projectDescription'>
+      & { cards?: Maybe<Array<Maybe<(
+        { __typename?: 'Card' }
+        & Pick<Card, '_id'>
       )>>> }
     )>>> }
   )> }
@@ -277,39 +239,30 @@ export type GetProjectByIdQuery = (
   )> }
 );
 
+export const BaseCardFragmentDoc = gql`
+    fragment BaseCard on Card {
+  _id
+  category
+  body
+}
+    `;
 export const BaseProjectFragmentDoc = gql`
     fragment BaseProject on Project {
   _id
   projectName
   projectDescription
-  tabs {
-    _id
-    tabName
-    cards {
-      _id
-      cardBody
-    }
-  }
-}
-    `;
-export const BaseTabFragmentDoc = gql`
-    fragment BaseTab on Tab {
-  _id
-  tabName
   cards {
-    _id
-    cardBody
+    ...BaseCard
   }
 }
-    `;
+    ${BaseCardFragmentDoc}`;
 export const CreateCardDocument = gql`
-    mutation CreateCard($projectId: ID!, $tabId: ID!, $cardBody: String!) {
-  createCard(projectId: $projectId, tabId: $tabId, cardBody: $cardBody) {
-    _id
-    cardBody
+    mutation CreateCard($projectId: ID!, $input: CardInput!) {
+  createCard(projectId: $projectId, input: $input) {
+    ...BaseCard
   }
 }
-    `;
+    ${BaseCardFragmentDoc}`;
 export type CreateCardMutationFn = Apollo.MutationFunction<CreateCardMutation, CreateCardMutationVariables>;
 
 /**
@@ -326,8 +279,7 @@ export type CreateCardMutationFn = Apollo.MutationFunction<CreateCardMutation, C
  * const [createCardMutation, { data, loading, error }] = useCreateCardMutation({
  *   variables: {
  *      projectId: // value for 'projectId'
- *      tabId: // value for 'tabId'
- *      cardBody: // value for 'cardBody'
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -375,43 +327,9 @@ export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
-export const CreateTabDocument = gql`
-    mutation CreateTab($id: ID!, $tabName: String!) {
-  createTab(projectId: $id, tabName: $tabName) {
-    ...BaseTab
-  }
-}
-    ${BaseTabFragmentDoc}`;
-export type CreateTabMutationFn = Apollo.MutationFunction<CreateTabMutation, CreateTabMutationVariables>;
-
-/**
- * __useCreateTabMutation__
- *
- * To run a mutation, you first call `useCreateTabMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateTabMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createTabMutation, { data, loading, error }] = useCreateTabMutation({
- *   variables: {
- *      id: // value for 'id'
- *      tabName: // value for 'tabName'
- *   },
- * });
- */
-export function useCreateTabMutation(baseOptions?: Apollo.MutationHookOptions<CreateTabMutation, CreateTabMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTabMutation, CreateTabMutationVariables>(CreateTabDocument, options);
-      }
-export type CreateTabMutationHookResult = ReturnType<typeof useCreateTabMutation>;
-export type CreateTabMutationResult = Apollo.MutationResult<CreateTabMutation>;
-export type CreateTabMutationOptions = Apollo.BaseMutationOptions<CreateTabMutation, CreateTabMutationVariables>;
 export const DeleteCardDocument = gql`
-    mutation DeleteCard($projectId: ID!, $tabId: ID!, $cardId: ID!) {
-  deleteCard(projectId: $projectId, tabId: $tabId, cardId: $cardId)
+    mutation DeleteCard($projectId: ID!, $cardId: ID!) {
+  deleteCard(projectId: $projectId, cardId: $cardId)
 }
     `;
 export type DeleteCardMutationFn = Apollo.MutationFunction<DeleteCardMutation, DeleteCardMutationVariables>;
@@ -430,7 +348,6 @@ export type DeleteCardMutationFn = Apollo.MutationFunction<DeleteCardMutation, D
  * const [deleteCardMutation, { data, loading, error }] = useDeleteCardMutation({
  *   variables: {
  *      projectId: // value for 'projectId'
- *      tabId: // value for 'tabId'
  *      cardId: // value for 'cardId'
  *   },
  * });
@@ -473,6 +390,41 @@ export function useDeleteProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteProjectMutationHookResult = ReturnType<typeof useDeleteProjectMutation>;
 export type DeleteProjectMutationResult = Apollo.MutationResult<DeleteProjectMutation>;
 export type DeleteProjectMutationOptions = Apollo.BaseMutationOptions<DeleteProjectMutation, DeleteProjectMutationVariables>;
+export const UpdateCardDocument = gql`
+    mutation UpdateCard($projectId: ID!, $cardId: ID!, $input: CardInput!) {
+  updateCard(projectId: $projectId, cardId: $cardId, input: $input) {
+    ...BaseCard
+  }
+}
+    ${BaseCardFragmentDoc}`;
+export type UpdateCardMutationFn = Apollo.MutationFunction<UpdateCardMutation, UpdateCardMutationVariables>;
+
+/**
+ * __useUpdateCardMutation__
+ *
+ * To run a mutation, you first call `useUpdateCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCardMutation, { data, loading, error }] = useUpdateCardMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      cardId: // value for 'cardId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCardMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCardMutation, UpdateCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCardMutation, UpdateCardMutationVariables>(UpdateCardDocument, options);
+      }
+export type UpdateCardMutationHookResult = ReturnType<typeof useUpdateCardMutation>;
+export type UpdateCardMutationResult = Apollo.MutationResult<UpdateCardMutation>;
+export type UpdateCardMutationOptions = Apollo.BaseMutationOptions<UpdateCardMutation, UpdateCardMutationVariables>;
 export const UpdateProjectDocument = gql`
     mutation UpdateProject($id: ID!, $projectName: String, $projectDescription: String) {
   updateProject(
@@ -520,9 +472,9 @@ export const AuthenticatedUserDocument = gql`
     githubId
     projects {
       _id
-      projectDescription
       projectName
-      tabs {
+      projectDescription
+      cards {
         _id
       }
     }
