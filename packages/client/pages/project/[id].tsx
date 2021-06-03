@@ -31,7 +31,12 @@ const Project = () => {
 
   const handleDeleteProject = async () => {
     const id = data.getProjectById._id;
-    await deleteProject({ variables: { id } });
+    await deleteProject({
+      variables: { id },
+      update: (cache) => {
+        cache.evict({ id: 'Project:' + id });
+      },
+    });
     reset();
     router.push('/dashboard');
   };
@@ -43,7 +48,7 @@ const Project = () => {
       <div className="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4 w-4/6 m-auto">
         <header className="flex">
           <h1 className="text-4xl font-bold uppercase flex-1">
-            {data.getProjectById.projectName}
+            {data.getProjectById.projectName || ''}
           </h1>
 
           <div>

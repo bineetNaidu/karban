@@ -15,6 +15,9 @@ const NewProjectPage = () => {
     if (projectDescription && projectName) {
       const { data, errors } = await createProject({
         variables: { projectName, projectDescription },
+        update: (cache) => {
+          cache.evict({ fieldName: 'authenticatedUser' });
+        },
       });
 
       if (errors) return;
