@@ -4,7 +4,7 @@ export const typeDefs = gql`
   type Card {
     _id: ID!
     category: String!
-    cardBody: String
+    body: String
   }
 
   type Project {
@@ -32,10 +32,16 @@ export const typeDefs = gql`
     projectDescription: String
   }
 
+  input CreateCardInput {
+    category: String
+    body: String
+  }
+
   type Mutation {
     # Projects
     createProject(projectName: String!, projectDescription: String!): Project
     updateProject(id: ID!, data: ProjectUpdateDataInput): Project
     deleteProject(id: ID!): Boolean
+    createCard(projectId: ID!, input: CreateCardInput): Card
   }
 `;
