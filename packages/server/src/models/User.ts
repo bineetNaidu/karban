@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-import { StringAndRequired, StringAndRequiredAndUnique } from './utils';
+import { StringAndRequiredAndUnique } from './utils';
 import Project from './Project';
 
 export interface UserDoc extends mongoose.Document {

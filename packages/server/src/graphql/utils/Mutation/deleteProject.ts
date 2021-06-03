@@ -1,4 +1,4 @@
-import Project, { ProjectDoc } from '../../../models/Project';
+import Project from '../../../models/Project';
 import { ContextType } from '../../../utils/createContext';
 
 interface ArgsType {
@@ -6,7 +6,7 @@ interface ArgsType {
 }
 
 export const deleteProject = async (
-  parent: any,
+  _parent: any,
   args: ArgsType,
   ctx: ContextType
 ): Promise<boolean> => {
@@ -21,16 +21,16 @@ export const deleteProject = async (
     throw new Error('No Projects Found with the given ID!');
   }
 
-  if (!user.projects.includes(project._id)) {
+  if (!user!.projects.includes(project._id)) {
     throw new Error('Not Authorized to perform this task into this project!');
   }
 
   try {
-    await user.update({
+    await user!.update({
       $pull: { projects: project._id },
     });
 
-    await user.save();
+    await user!.save();
 
     await project.remove();
   } catch (error) {

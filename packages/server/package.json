@@ -8,9 +8,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node ./build/app",
-    "dev": "nodemon ./src/app",
-    "build": "tsc"
+    "start": "node ./dist/app",
+    "dev": "nodemon ./dist/app",
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "dependencies": {
     "@types/express-session": "^1.17.3",

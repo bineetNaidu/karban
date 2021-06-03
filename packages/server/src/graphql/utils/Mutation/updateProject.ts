@@ -10,7 +10,7 @@ interface ArgsType {
 }
 
 export const updateProject = async (
-  parent: any,
+  _parent: any,
   args: ArgsType,
   ctx: ContextType
 ): Promise<ProjectDoc> => {
@@ -25,7 +25,7 @@ export const updateProject = async (
     throw new Error('No Projects Found with the given ID!');
   }
 
-  if (!user.projects.includes(project._id)) {
+  if (!user!.projects.includes(project._id)) {
     throw new Error('Not Authorized to perform this task into this project!');
   }
 

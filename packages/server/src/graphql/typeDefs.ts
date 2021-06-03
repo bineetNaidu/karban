@@ -3,20 +3,15 @@ import { gql } from 'apollo-server';
 export const typeDefs = gql`
   type Card {
     _id: ID!
-    cardBody: String
-  }
-
-  type Tab {
-    _id: ID
-    tabName: String!
-    cards: [Card]
+    category: String!
+    body: String
   }
 
   type Project {
     _id: ID
     projectName: String!
     projectDescription: String!
-    tabs: [Tab]
+    cards: [Card]
   }
 
   type User {
@@ -29,10 +24,7 @@ export const typeDefs = gql`
 
   type Query {
     authenticatedUser: User
-    allProjects: [Project]
-    allUsers: [User]
     getProjectById(id: ID!): Project
-    getTabById(id: ID!): Tab
   }
 
   input ProjectUpdateDataInput {
@@ -40,9 +32,9 @@ export const typeDefs = gql`
     projectDescription: String
   }
 
-  input TabUpdateDataInput {
-    tabName: String
-    tabId: String!
+  input CardInput {
+    category: String
+    body: String
   }
 
   type Mutation {
@@ -50,12 +42,8 @@ export const typeDefs = gql`
     createProject(projectName: String!, projectDescription: String!): Project
     updateProject(id: ID!, data: ProjectUpdateDataInput): Project
     deleteProject(id: ID!): Boolean
-
-    # Tabs
-    createTab(projectId: ID!, tabName: String!): Tab
-    updateTab(projectId: ID!, data: TabUpdateDataInput): Tab
-    deleteTab(projectId: ID!, tabId: ID!): Boolean
-    createCard(projectId: ID!, tabId: ID!, cardBody: String!): [Card]
-    deleteCard(projectId: ID!, tabId: ID!, cardId: ID!): Boolean
+    createCard(projectId: ID!, input: CardInput): Card
+    updateCard(projectId: ID!, cardId: ID!, input: CardInput): Card
+    deleteCard(projectId: ID!, cardId: ID!): Boolean
   }
 `;

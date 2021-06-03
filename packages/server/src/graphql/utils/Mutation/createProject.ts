@@ -7,7 +7,7 @@ interface ArgsType {
 }
 
 export const createProject = async (
-  parent: any,
+  _parent: any,
   args: ArgsType,
   ctx: ContextType
 ): Promise<ProjectDoc> => {
@@ -24,9 +24,9 @@ export const createProject = async (
 
   const user = await ctx.getUser();
 
-  user.projects.push(project._id);
+  user!.projects.push(project._id);
 
-  user.save();
+  user!.save();
 
   return project;
 };

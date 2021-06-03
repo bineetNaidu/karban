@@ -4,13 +4,14 @@ import { ContextType } from '../../../utils/createContext';
 
 interface ArgsType {
   projectId: string;
+  cardId: string;
   input: {
     category: string;
     body: string;
   };
 }
 
-export const createCard = async (
+export const updateCard = async (
   _parent: any,
   args: ArgsType,
   ctx: ContextType
@@ -30,11 +31,14 @@ export const createCard = async (
     throw new Error('Not Authorized to perform this task into this field!');
   }
 
-  const card = await Card.build(args.input.body).save();
+  const card = await Card.findById(args.cardId);
 
-  project.cards.push(card._id);
+  if (!card) {
+    throw new Error('Card with then given ID was not found');
+  }
 
-  await project.save();
+  card.set(args.input);
+  const updatedCard = await card.save();
 
-  return card;
+  return updatedCard;
 };

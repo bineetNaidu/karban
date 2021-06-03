@@ -1,15 +1,18 @@
 import Project from '../../../models/Project';
-import Tab, { TabDoc } from '../../../models/Tab';
+import Card from '../../../models/Card';
 import { ContextType } from '../../../utils/createContext';
 
 interface ArgsType {
   projectId: string;
-  tabId: string;
   cardId: string;
+  input: {
+    category: string;
+    body: string;
+  };
 }
 
 export const deleteCard = async (
-  parent: any,
+  _parent: any,
   args: ArgsType,
   ctx: ContextType
 ): Promise<Boolean> => {
@@ -17,30 +20,33 @@ export const deleteCard = async (
     throw new Error('Please Login First!');
   }
 
-  const user = await ctx.getUser();
-  const project = await Project.findOne({ _id: args.projectId });
-  const tab = await Tab.findOne({ _id: args.tabId });
-
-  if (!project) {
-    throw new Error('Project With the Given ID was not Found!');
-  }
-
-  if (!tab) {
-    throw new Error('Tab With the Given ID was not Found!');
-  }
-
-  if (!user.projects.includes(project._id)) {
-    throw new Error('Not Authorized to perform this task into this field!');
-  }
-
   try {
-    const deleteCardsCol = tab.cards.filter((c) => c._id != args.cardId);
+    const user = await ctx.getUser();
+    const project = await Project.findById(args.projectId);
+    if (!project) {
+      throw new Error('Project with then given ID was not found');
+    }
 
-    await tab.update({ $set: { cards: deleteCardsCol } });
+    if (!user!.projects.includes(project._id)) {
+      throw new Error('Not Authorized to perform this task into this field!');
+    }
 
-    await tab.save();
+    const card = await Card.findById(args.cardId);
+
+    if (!card) {
+      throw new Error('Card with then given ID was not found');
+    }
+
+    await project.update({
+      $pull: { cards: card._id },
+    });
+
+    await project.save();
+
+    await card.remove();
+
     return true;
-  } catch (error) {
+  } catch (e) {
     return false;
   }
 };
