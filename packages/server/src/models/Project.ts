@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-import Tab from './Tab';
+import Card from './Card';
 import { StringAndRequired } from './utils';
 
 export interface ProjectDoc extends mongoose.Document {
   projectName: string;
   projectDescription?: string;
-  tabs: string[];
+  cards: string[];
 }
 
 interface ProjectModel extends mongoose.Model<ProjectDoc> {
@@ -15,18 +15,18 @@ interface ProjectModel extends mongoose.Model<ProjectDoc> {
 const ProjectSchema = new mongoose.Schema<ProjectDoc, ProjectModel>({
   projectName: StringAndRequired,
   projectDescription: String,
-  tabs: [
+  cards: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Tab',
+      ref: 'Card',
     },
   ],
 });
 
 ProjectSchema.pre('remove', async function () {
-  await Tab.remove({
+  await Card.remove({
     _id: {
-      $in: this.tabs,
+      $in: this.cards,
     },
   });
 });
