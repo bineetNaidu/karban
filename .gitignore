@@ -4,3 +4,5 @@ node_modules/@sapper/
 yarn-error.log
 __sapper__
 .env
+dist
+build
