@@ -8,6 +8,7 @@ import {
 import { withApollo } from '../../lib/withApollo';
 import { useProjectStore } from '../../lib/project.store';
 import { useEffect } from 'react';
+import { Card } from '../../components/Card';
 
 const Project = () => {
   const router = useRouter();
@@ -66,7 +67,13 @@ const Project = () => {
 
         <hr />
 
-        <section className="grid grid-cols-4"></section>
+        <section className="grid grid-cols-4">
+          {data.getProjectById.cards.map((c) =>
+            !c ? null : (
+              <Card projectId={data.getProjectById._id} card={c} key={c._id} />
+            )
+          )}
+        </section>
       </div>
     </div>
   );
