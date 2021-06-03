@@ -4,7 +4,7 @@ import User, { UserDoc } from '../models/User';
 export type ContextType = {
   hasAuth: boolean;
   uid: string;
-  getUser: () => Promise<UserDoc>;
+  getUser: () => Promise<UserDoc | null>;
   req: Request;
 };
 
@@ -14,7 +14,6 @@ export const createContext = async (req: Request): Promise<ContextType> => {
   return {
     hasAuth: !!uid,
     uid,
-    // @ts-ignore
     getUser: async () => {
       const user = await User.findOne({ _id: uid });
       return user;
