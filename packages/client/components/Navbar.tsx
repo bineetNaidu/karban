@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
-import HamburgerMenu from './HamburgerMenu';
 import Spinner from './Spinner';
 
 const Navbar: FC = () => {
@@ -21,13 +20,10 @@ const Navbar: FC = () => {
     return <h1>Hold up</h1>;
   }
   return (
-    <nav className="bg-gray-800">
+    <nav className="bg-gray-800 z-50">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <HamburgerMenu />
-          </div>
-          <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+          <div className="flex items-center justify-center sm:items-stretch sm:justify-start">
             <Link href="/">
               <div className="flex-shrink-0 flex items-center cursor-pointer">
                 <img
@@ -36,7 +32,7 @@ const Navbar: FC = () => {
                   alt="Workflow"
                 />
                 <p className="text-gray-300 px-3 py-2 rounded-md text-2xl font-medium hover:underline">
-                  Karban Board
+                  Karban
                 </p>
               </div>
             </Link>
@@ -64,13 +60,13 @@ const Navbar: FC = () => {
 
                 {open && (
                   <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <Link href="/profile">
+                    <Link href="/dashboard">
                       <span
                         className={
                           'bg-gray-100 block px-4 py-2 text-sm hover:bg-gray-700 hover:text-white'
                         }
                       >
-                        Profile
+                        Dashboard
                       </span>
                     </Link>
                     <Link href="/setting">
