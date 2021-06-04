@@ -5,7 +5,7 @@ export default function Home() {
   const [showMobNav, setShowMobNav] = useState<boolean>(false);
 
   const login = () => {
-    const url = 'http://localhost:4242/api/v1/auth/github';
+    const url = process.env.API_URL + '/api/v1/auth/github';
     return (window.location.href = url);
   };
 
