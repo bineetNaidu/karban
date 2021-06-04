@@ -1,19 +1,16 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useCreateCardMutation } from '../generated/graphql';
 import useForm from '../hooks/useForm';
+import useToggle from '../hooks/useToggle';
 
 interface Props {
   projectId: string;
 }
 
 const CreateCard: FC<Props> = ({ projectId }) => {
-  const [showInput, setShowInput] = useState(false);
+  const [showInput, toggleView] = useToggle(false);
   const [body, handleBody, resetBody] = useForm('');
   const [createCard] = useCreateCardMutation();
-
-  const toggleView = () => {
-    setShowInput((prevState) => !prevState);
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,6 +18,9 @@ const CreateCard: FC<Props> = ({ projectId }) => {
       variables: {
         input: { body },
         projectId,
+      },
+      update: (cache) => {
+        cache.evict({ fieldName: 'getProjectById' });
       },
     });
     resetBody();
@@ -45,6 +45,13 @@ const CreateCard: FC<Props> = ({ projectId }) => {
             className="bg-green-500 text-white w-10/12 mt-2 rounded py-1"
           >
             Add
+          </button>
+          <button
+            type="reset"
+            onClick={toggleView}
+            className="bg-red-500 text-white w-10/12 mt-2 rounded py-1"
+          >
+            Cancel
           </button>
         </form>
       ) : (
