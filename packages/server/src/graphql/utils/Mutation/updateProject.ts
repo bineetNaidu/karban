@@ -19,7 +19,7 @@ export const updateProject = async (
   }
 
   const user = await ctx.getUser();
-  const project = await Project.findOne({ _id: args.id });
+  const project = await Project.findOne({ _id: args.id }).populate('cards');
 
   if (!project) {
     throw new Error('No Projects Found with the given ID!');
