@@ -59,7 +59,7 @@ const Project = () => {
             >
               <img src="/trash.svg" alt="" className="text-white h-6" />
             </button>
-            <Link href={`project/edit/${data.getProjectById._id}`}>
+            <Link href={`/project/edit/${data.getProjectById._id}`}>
               <button className="py-2 px-4 border border-blue-600 border-dashed rounded mx-2 text-white">
                 <img src="/edit.svg" alt="" className="text-white h-6" />
               </button>

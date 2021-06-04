@@ -29,7 +29,7 @@ const NewProjectPage = () => {
 
   return (
     <Wrapper>
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg m-16">
+      <div className="bg-white shadow overflow-hidden sm:rounded-lg m-16 w-7/12 mx-auto">
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             New Project
@@ -47,7 +47,7 @@ const NewProjectPage = () => {
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <input
                   type="text"
-                  className="mt-1 ring-indigo-500 border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+                  className="mt-1 ring-indigo-500 border px-3 border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
                   value={projectName}
                   onChange={handleProjectname}
                 />
@@ -60,7 +60,7 @@ const NewProjectPage = () => {
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <textarea
-                  className="shadow-sm ring-indigo-500 border-indigo-500 mt-1 block w-full sm:text-sm rounded-md"
+                  className="shadow-sm ring-indigo-500 border px-3 border-indigo-500 mt-1 block w-full sm:text-sm rounded-md"
                   value={projectDescription}
                   onChange={handleProjectDesc}
                 ></textarea>
