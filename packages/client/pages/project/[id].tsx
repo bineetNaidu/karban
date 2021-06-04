@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { Card } from '../../components/Card';
 import CreateCard from '../../components/CreateCard';
 import Wrapper from '../../components/Wrapper';
+import Link from 'next/link';
 
 const Project = () => {
   const router = useRouter();
@@ -54,19 +55,21 @@ const Project = () => {
           <div>
             <button
               onClick={handleDeleteProject}
-              className="py-2 px-4 border-black border-1 bg-red-600 rounded mx-2 text-white"
+              className="py-2 px-4 border border-red-600 border-dashed rounded mx-2 text-white"
             >
-              Delete
+              <img src="/trash.svg" alt="" className="text-white h-6" />
             </button>
-            <button className="py-2 px-4 border-black border-1 bg-blue-600 rounded mx-2 text-white">
-              Edit
-            </button>
+            <Link href={`project/edit/${data.getProjectById._id}`}>
+              <button className="py-2 px-4 border border-blue-600 border-dashed rounded mx-2 text-white">
+                <img src="/edit.svg" alt="" className="text-white h-6" />
+              </button>
+            </Link>
           </div>
         </header>
 
         <hr />
 
-        <section className="grid grid-cols-4 space-x-4">
+        <section className="grid grid-cols-4">
           {data.getProjectById.cards.map((c) =>
             !c ? null : (
               <Card projectId={data.getProjectById._id} card={c} key={c._id} />

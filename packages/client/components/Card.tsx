@@ -35,15 +35,15 @@ export const Card: FC<Props> = ({ card, projectId }) => {
   };
 
   return (
-    <div className="px-4 py-2 border-2 border-blue-200 h-20 border-dashed relative group rounded shadow">
+    <div className="px-4 py-2 border-2 border-blue-200 h-20 m-1 border-dashed relative group rounded shadow">
       {updateMode ? (
         <form
           onSubmit={handleSubmit}
-          className="flex items-center flex-col justify-center rounded-lg border-2 border-blue-200 text-sm font-medium py-4 w-full"
+          className="flex items-center flex-col justify-center rounded-lg border-2 border-blue-200 text-sm font-medium py-4 z-50"
         >
           <h2 className="mb-2 text-base">Edit Card Body</h2>
           <textarea
-            className=" outline-black"
+            className="mx-5 outline-black"
             value={body}
             onChange={handleBody}
           ></textarea>
@@ -67,13 +67,10 @@ export const Card: FC<Props> = ({ card, projectId }) => {
 
           <div className="absolute top-0 right-0">
             <button
-              className="bg-green-600 text-white px-2 py-1 right-0 font-light text-xs opacity-0 group-hover:opacity-100 transition-all"
+              className="bg-green-600 text-white px-2 py-1 right-0 font-light text-xs opacity-0 group-hover:opacity-100 transition-all mr-1"
               onClick={toggleUpdateMode}
             >
-              <img
-                src="https://freesvg.org/img/edit-icon.png"
-                className="w-3 mr-1"
-              />
+              <img src="/edit.svg" alt="" className="text-white h-5" />
             </button>
             <button
               className="bg-red-600 text-white px-2 py-1 right-0 font-light text-xs opacity-0 group-hover:opacity-100 transition-all"
@@ -89,7 +86,7 @@ export const Card: FC<Props> = ({ card, projectId }) => {
                 });
               }}
             >
-              X
+              <img src="/trash.svg" alt="" className="text-white h-5" />
             </button>
           </div>
         </>

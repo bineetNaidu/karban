@@ -32,7 +32,7 @@ const CreateCard: FC<Props> = ({ projectId }) => {
       {showInput ? (
         <form
           onSubmit={handleSubmit}
-          className="flex items-center flex-col justify-center rounded-lg border-2 border-blue-200 text-sm font-medium py-4 w-full"
+          className="flex items-center flex-col justify-center rounded-lg border-2 border-blue-200 text-sm font-medium py-4 w-full z-50"
         >
           <h2 className="mb-2 text-base">Card Body</h2>
           <textarea
@@ -56,7 +56,7 @@ const CreateCard: FC<Props> = ({ projectId }) => {
         </form>
       ) : (
         <span
-          className="hover:border-transparent hover:shadow-xs w-full flex items-center justify-center rounded-lg border-2 border-dashed border-blue-200 text-sm font-medium py-4"
+          className="hover:border-transparent hover:shadow-xs w-full h-full m-1 flex items-center justify-center rounded-lg border-2 border-dashed border-blue-200 text-sm font-medium py-4"
           onClick={toggleView}
         >
           Add Card
