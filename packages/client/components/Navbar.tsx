@@ -1,9 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
 import Spinner from './Spinner';
+import { useRouter } from 'next/router';
 
 const Navbar: FC = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const { data, loading } = useAuthenticatedUserQuery({
     skip: typeof window === 'undefined',
@@ -16,9 +18,12 @@ const Navbar: FC = () => {
     setOpen((prevState) => !prevState);
   };
 
-  if (!data) {
-    return <h1>Hold up</h1>;
-  }
+  useEffect(() => {
+    if (!loading && !data) {
+      router.replace('/');
+    }
+  }, [loading]);
+
   return (
     <nav className="bg-gray-800 z-50">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -41,7 +46,7 @@ const Navbar: FC = () => {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {loading ? (
               <Spinner />
-            ) : (
+            ) : data ? (
               <div className="ml-3 relative flex justify-between">
                 <p className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium mr-3">
                   @{data.authenticatedUser.username}
@@ -88,7 +93,7 @@ const Navbar: FC = () => {
                   </div>
                 )}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

@@ -44,15 +44,17 @@ const dashboard: FC = () => {
           {loading ? (
             <Spinner />
           ) : (
-            data.authenticatedUser.projects.map((project) => (
-              <li key={project._id}>
-                <ProjectCard
-                  description={project.projectDescription}
-                  id={project._id}
-                  name={project.projectName}
-                />
-              </li>
-            ))
+            data.authenticatedUser.projects.map((project) =>
+              !project ? null : (
+                <li key={project._id}>
+                  <ProjectCard
+                    description={project.projectDescription}
+                    id={project._id}
+                    name={project.projectName}
+                  />
+                </li>
+              )
+            )
           )}
           <Link href="/new">
             <li className="hover:shadow-lg flex rounded-lg cursor-pointer">
