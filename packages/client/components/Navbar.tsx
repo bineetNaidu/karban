@@ -8,7 +8,7 @@ const Navbar: FC = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { data, loading, error } = useAuthenticatedUserQuery({
-    skip: typeof window === 'undefined',
+    // skip: typeof window === 'undefined',
   });
 
   const defaultAvatar =
@@ -17,13 +17,13 @@ const Navbar: FC = () => {
   const handleToggleOpen = () => {
     setOpen((prevState) => !prevState);
   };
-
-  useEffect(() => {
-    if (!loading && !data) {
-      console.log(error);
-      // router.replace('/');
-    }
-  }, [loading]);
+  console.log(error);
+  // useEffect(() => {
+  //   if (!data.authenticatedUser) {
+  //     // console.log(error);
+  //     router.replace('/');
+  //   }
+  // }, [loading]);
 
   return (
     <nav className="bg-gray-800 z-50">
@@ -45,7 +45,7 @@ const Navbar: FC = () => {
             <div className="hidden sm:block sm:ml-6" />
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {loading && !data.authenticatedUser ? (
+            {loading ? (
               <Spinner />
             ) : data && data.authenticatedUser ? (
               <div className="ml-3 relative flex justify-between">

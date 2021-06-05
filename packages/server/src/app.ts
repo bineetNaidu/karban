@@ -45,7 +45,7 @@ app.use(
       maxAge: 24 * 60 * 60 * 30,
       signed: true,
       httpOnly: true,
-      sameSite: 'lax',
+      // sameSite: 'lax',
     },
   })
 );

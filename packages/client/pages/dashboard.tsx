@@ -8,17 +8,19 @@ import Wrapper from '../components/Wrapper';
 import { useRouter } from 'next/router';
 
 const dashboard: FC = () => {
-  const { data, loading } = useAuthenticatedUserQuery();
+  const { data, loading, error } = useAuthenticatedUserQuery();
   const router = useRouter();
   if (!loading && !data) {
     return <h1>Something went wrong!</h1>;
   }
 
-  useEffect(() => {
-    if (data && !data.authenticatedUser) {
-      router.replace('/');
-    }
-  });
+  console.log(error);
+
+  // useEffect(() => {
+  //   if (!data.authenticatedUser) {
+  //     router.push('/');
+  //   }
+  // }, [loading]);
 
   return (
     <Wrapper>
@@ -52,9 +54,9 @@ const dashboard: FC = () => {
           {loading ? (
             <Spinner />
           ) : (
-            data &&
-            data.authenticatedUser &&
-            data.authenticatedUser.projects != null &&
+            // data &&
+            // data.authenticatedUser &&
+            // data.authenticatedUser.projects != null &&
             data.authenticatedUser.projects.map((project) =>
               !project ? null : (
                 <li key={project._id}>
