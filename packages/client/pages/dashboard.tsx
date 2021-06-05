@@ -1,16 +1,24 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import Link from 'next/link';
 import ProjectCard from '../components/ProjectCard';
 import { withApollo } from '../lib/withApollo';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
 import Spinner from '../components/Spinner';
 import Wrapper from '../components/Wrapper';
+import { useRouter } from 'next/router';
 
 const dashboard: FC = () => {
   const { data, loading } = useAuthenticatedUserQuery();
+  const router = useRouter();
   if (!loading && !data) {
     return <h1>Something went wrong!</h1>;
   }
+
+  useEffect(() => {
+    if (data && !data.authenticatedUser) {
+      router.replace('/');
+    }
+  });
 
   return (
     <Wrapper>
@@ -44,6 +52,9 @@ const dashboard: FC = () => {
           {loading ? (
             <Spinner />
           ) : (
+            data &&
+            data.authenticatedUser &&
+            data.authenticatedUser.projects != null &&
             data.authenticatedUser.projects.map((project) =>
               !project ? null : (
                 <li key={project._id}>
