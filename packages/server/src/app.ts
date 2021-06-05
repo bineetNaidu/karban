@@ -11,6 +11,7 @@ import apiRouter from './api';
 import { createContext } from './utils/createContext';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import NotFoundError from './utils/NotFoundError';
+import MongoStore from 'connect-mongo';
 import cors from 'cors';
 
 // ***** App Config *****
@@ -30,13 +31,17 @@ app.use(
 /* Express-Session configuration */
 app.use(
   expressSession({
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      touchAfter: 24 * 60 * 60 * 30, // ? 1month
+    }),
     secret: process.env.JWT_SECRET!,
     resave: false,
     saveUninitialized: true,
     name: 'KarbanSess',
     cookie: {
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 60 * 24,
+      maxAge: 24 * 60 * 60 * 30,
       signed: true,
       httpOnly: true,
       sameSite: 'lax',
