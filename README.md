@@ -2,7 +2,7 @@
 
 \***_Heads-up_** : _This is a mono-repo_
 
-Karban is trello clone. Made with Svelte + Sapper + Typescript + Nodejs + Expressjs + MongoDB + 💙💚.
+Karban is project management board. Made with React + Nextjs + Typescript + Nodejs + Expressjs + MongoDB + GraphQL + 💙💚.
 
 ## Installation
 
