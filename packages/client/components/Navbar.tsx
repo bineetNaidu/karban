@@ -46,7 +46,7 @@ const Navbar: FC = () => {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {loading ? (
               <Spinner />
-            ) : data ? (
+            ) : data && data.authenticatedUser ? (
               <div className="ml-3 relative flex justify-between">
                 <p className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium mr-3">
                   @{data.authenticatedUser.username}
