@@ -40,7 +40,8 @@ app.use(
     saveUninitialized: true,
     name: 'KarbanSess',
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production',
+      secure: false,
       maxAge: 24 * 60 * 60 * 30,
       signed: true,
       httpOnly: true,
