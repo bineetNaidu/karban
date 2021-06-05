@@ -5,8 +5,6 @@ import {
   useGetProjectByIdQuery,
 } from '../../generated/graphql';
 import { withApollo } from '../../lib/withApollo';
-import { useProjectStore } from '../../lib/project.store';
-import { useEffect } from 'react';
 import { Card } from '../../components/Card';
 import CreateCard from '../../components/CreateCard';
 import Wrapper from '../../components/Wrapper';
@@ -17,17 +15,7 @@ const Project = () => {
   const { data, loading } = useGetProjectByIdQuery({
     variables: { id: router.query.id as string },
   });
-  const { reset, setCard } = useProjectStore();
   const [deleteProject] = useDeleteProjectMutation();
-
-  useEffect(() => {
-    if (data) {
-      const unsub = setCard(data.getProjectById.cards);
-      return () => {
-        unsub;
-      };
-    }
-  }, [loading]);
 
   if (loading) return <Spinner />;
   if (!data && !loading) return <h1>Somthing went wrong</h1>;
@@ -40,7 +28,6 @@ const Project = () => {
         cache.evict({ id: 'Project:' + id });
       },
     });
-    reset();
     router.push('/dashboard');
   };
 
