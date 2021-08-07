@@ -3,7 +3,6 @@ query AuthenticatedUser {
     _id
     username
     avatar
-    githubId
     projects {
       _id
       projectName
