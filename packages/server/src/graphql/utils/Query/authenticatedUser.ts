@@ -1,13 +1,14 @@
 import User, { UserDoc } from '../../../models/User';
 import { ContextType } from '../../../utils/createContext';
 
-// @ts-ignore
-export const authenticatedUser: Promise<UserDoc | null> = async (
+export const authenticatedUser = async (
   _parent: any,
   _args: any,
   ctx: ContextType
-) => {
-  const authUser = await User.findOne({ _id: ctx.uid })
+): Promise<UserDoc | null> => {
+  const authUser = await User.findOne({
+    _id: ctx.req.session.userId,
+  })
     .populate('projects')
     .exec();
 

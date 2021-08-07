@@ -1,10 +1,9 @@
 import Project, { ProjectDoc } from '../../../models/Project';
 
-// @ts-ignore
-export const getProjectById: Promise<ProjectDoc | null> = async (
+export const getProjectById = async (
   _parent: any,
   args: { id: string }
-) => {
+): Promise<ProjectDoc | null> => {
   const project = await Project.findOne({ _id: args.id })
     .populate('cards')
     .exec();

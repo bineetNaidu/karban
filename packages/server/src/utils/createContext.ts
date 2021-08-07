@@ -1,23 +1,11 @@
-import { Request } from 'express';
-import User, { UserDoc } from '../models/User';
+import { Request, Response } from 'express';
+import { UserDoc } from 'src/models/User';
+
+type CustomRequest = Request & { session: { userId: string } };
 
 export type ContextType = {
+  req: CustomRequest;
+  res: Response;
   hasAuth: boolean;
-  uid: string;
   getUser: () => Promise<UserDoc | null>;
-  req: Request;
-};
-
-export const createContext = async (req: Request): Promise<ContextType> => {
-  const uid = (req.session as any).passport?.user?._id;
-
-  return {
-    hasAuth: !!uid,
-    uid,
-    getUser: async () => {
-      const user = await User.findOne({ _id: uid });
-      return user;
-    },
-    req,
-  };
 };

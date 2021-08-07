@@ -2,17 +2,15 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import dotenv from 'dotenv';
-import passport from 'passport';
 import expressSession from 'express-session';
 import connectDB from './config/db';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
-import apiRouter from './api';
-import { createContext } from './utils/createContext';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import NotFoundError from './utils/NotFoundError';
 import MongoStore from 'connect-mongo';
 import cors from 'cors';
+import User from './models/User';
 
 // ***** App Config *****
 dotenv.config();
@@ -28,38 +26,36 @@ app.use(
   })
 );
 
-/* Express-Session configuration */
 app.use(
   expressSession({
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
-      touchAfter: 24 * 60 * 60 * 30, // ? 1month
+      touchAfter: 60 * 60 * 24 * 7, // 1 week
     }),
-    secret: process.env.JWT_SECRET!,
+    secret: process.env.SESSION_SECRET!,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     name: 'KarbanSess',
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 30,
+      maxAge: 60 * 60 * 24, // 1 day
+      sameSite: false,
       httpOnly: true,
-      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production',
     },
   })
 );
 
-/* Passport configuration */
-app.use(passport.initialize());
-app.use(passport.session());
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user: Express.User, done) => done(null, user));
-
-app.use('/api', apiRouter(passport));
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => createContext(req),
+  context: async ({ req, res }) => ({
+    res,
+    req,
+    hasAuth: !!(req.session as any).userId,
+    getUser: async () => {
+      return User.findById((req.session as any).userId);
+    },
+  }),
 });
 
 /* Apollo GraphQL Server */
