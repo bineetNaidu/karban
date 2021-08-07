@@ -2,12 +2,10 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import dotenv from 'dotenv';
-import passport from 'passport';
 import expressSession from 'express-session';
 import connectDB from './config/db';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
-import apiRouter from './api';
 import { createContext } from './utils/createContext';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import NotFoundError from './utils/NotFoundError';
@@ -47,14 +45,6 @@ app.use(
     },
   })
 );
-
-/* Passport configuration */
-app.use(passport.initialize());
-app.use(passport.session());
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user: Express.User, done) => done(null, user));
-
-app.use('/api', apiRouter(passport));
 
 const server = new ApolloServer({
   typeDefs,
