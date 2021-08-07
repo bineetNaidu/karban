@@ -10,6 +10,7 @@ import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import NotFoundError from './utils/NotFoundError';
 import MongoStore from 'connect-mongo';
 import cors from 'cors';
+import User from './models/User';
 
 // ***** App Config *****
 dotenv.config();
@@ -29,17 +30,17 @@ app.use(
   expressSession({
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
-      touchAfter: 24 * 60 * 60 * 30, // ? 1month
+      touchAfter: 60 * 60 * 24 * 7, // 1 week
     }),
     secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
     name: 'KarbanSess',
     cookie: {
-      maxAge: 60 * 60 * 24 * 100, // 1 days
+      maxAge: 60 * 60 * 24, // 1 day
       sameSite: false,
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
     },
   })
 );
@@ -47,7 +48,14 @@ app.use(
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req, res }) => ({ res, req }),
+  context: async ({ req, res }) => ({
+    res,
+    req,
+    hasAuth: !!(req.session as any).userId,
+    getUser: async () => {
+      return User.findById((req.session as any).userId);
+    },
+  }),
 });
 
 /* Apollo GraphQL Server */
