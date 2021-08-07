@@ -18,7 +18,6 @@ export const typeDefs = gql`
     _id: ID
     username: String!
     avatar: String
-    githubId: String!
     projects: [Project]
   }
 
@@ -39,6 +38,9 @@ export const typeDefs = gql`
 
   type Mutation {
     # Projects
+    login(username: String!, password: String!): User
+    logout: Boolean
+    register(username: String!, password: String!, avatar: String): User
     createProject(projectName: String!, projectDescription: String!): Project
     updateProject(id: ID!, data: ProjectUpdateDataInput): Project
     deleteProject(id: ID!): Boolean
