@@ -6,7 +6,6 @@ import expressSession from 'express-session';
 import connectDB from './config/db';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
-import { createContext } from './utils/createContext';
 import ExpressErrorHandler from './utils/ExpressErrorHandler';
 import NotFoundError from './utils/NotFoundError';
 import MongoStore from 'connect-mongo';
@@ -26,22 +25,21 @@ app.use(
   })
 );
 
-/* Express-Session configuration */
 app.use(
   expressSession({
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
       touchAfter: 24 * 60 * 60 * 30, // ? 1month
     }),
-    secret: process.env.JWT_SECRET!,
+    secret: process.env.SESSION_SECRET!,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     name: 'KarbanSess',
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 30,
+      maxAge: 60 * 60 * 24 * 100, // 1 days
+      sameSite: false,
       httpOnly: true,
-      sameSite: 'none',
+      secure: false,
     },
   })
 );
@@ -49,7 +47,7 @@ app.use(
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => createContext(req),
+  context: async ({ req, res }) => ({ res, req }),
 });
 
 /* Apollo GraphQL Server */
