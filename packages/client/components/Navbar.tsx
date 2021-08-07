@@ -1,15 +1,24 @@
 import { FC, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuthenticatedUserQuery } from '../generated/graphql';
+import {
+  useAuthenticatedUserQuery,
+  useLogoutMutation,
+} from '../generated/graphql';
 import Spinner from './Spinner';
 import { useRouter } from 'next/router';
 
 const Navbar: FC = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [logout] = useLogoutMutation();
   const { data, loading, error } = useAuthenticatedUserQuery({
     // skip: typeof window === 'undefined',
   });
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/');
+  };
 
   const defaultAvatar =
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80';
@@ -17,13 +26,13 @@ const Navbar: FC = () => {
   const handleToggleOpen = () => {
     setOpen((prevState) => !prevState);
   };
-  console.log(error);
-  // useEffect(() => {
-  //   if (!data.authenticatedUser) {
-  //     // console.log(error);
-  //     router.replace('/');
-  //   }
-  // }, [loading]);
+
+  useEffect(() => {
+    if (!data.authenticatedUser) {
+      console.log(error);
+      router.replace('/');
+    }
+  }, [loading]);
 
   return (
     <nav className="bg-gray-800 z-50">
@@ -65,7 +74,7 @@ const Navbar: FC = () => {
                 </button>
 
                 {open && (
-                  <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="origin-top-right z-50 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Link href="/dashboard">
                       <span
                         className={
@@ -85,6 +94,7 @@ const Navbar: FC = () => {
                       </span>
                     </Link>
                     <div
+                      onClick={handleLogout}
                       className={
                         'bg-gray-100 block px-4 py-2 text-sm hover:bg-gray-700 hover:text-white'
                       }

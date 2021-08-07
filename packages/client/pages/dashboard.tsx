@@ -14,13 +14,11 @@ const dashboard: FC = () => {
     return <h1>Something went wrong!</h1>;
   }
 
-  console.log(error);
-
-  // useEffect(() => {
-  //   if (!data.authenticatedUser) {
-  //     router.push('/');
-  //   }
-  // }, [loading]);
+  useEffect(() => {
+    if (!data.authenticatedUser) {
+      router.push('/');
+    }
+  }, [loading, error]);
 
   return (
     <Wrapper>
@@ -54,9 +52,6 @@ const dashboard: FC = () => {
           {loading ? (
             <Spinner />
           ) : (
-            // data &&
-            // data.authenticatedUser &&
-            // data.authenticatedUser.projects != null &&
             data.authenticatedUser.projects.map((project) =>
               !project ? null : (
                 <li key={project._id}>

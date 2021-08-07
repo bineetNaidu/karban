@@ -4,11 +4,6 @@ import Link from 'next/link';
 export default function Home() {
   const [showMobNav, setShowMobNav] = useState<boolean>(false);
 
-  const login = () => {
-    const url = process.env.NEXT_PUBLIC_API_URL + '/api/v1/auth/github';
-    return (window.location.href = url);
-  };
-
   return (
     <section className="relative bg-white overflow-hidden h-full min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -160,16 +155,13 @@ export default function Home() {
                 Made with Nextjs + React + Typescript + GraphQl and 💚💙 .
               </p>
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                <div className="rounded-md shadow">
-                  <span
-                    onClick={async () => {
-                      login();
-                    }}
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-                  >
-                    Get started
-                  </span>
-                </div>
+                <Link href="/login">
+                  <div className="rounded-md shadow cursor-pointer">
+                    <span className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                      Get started
+                    </span>
+                  </div>
+                </Link>
                 <div className="mt-3 sm:mt-0 sm:ml-3">
                   <Link href="/product">
                     <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
