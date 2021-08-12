@@ -1,78 +1,69 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import Link from 'next/link';
 import ProjectCard from '../components/ProjectCard';
 import { withApollo } from '../lib/withApollo';
 import { useAuthenticatedUserQuery } from '../generated/graphql';
-import Spinner from '../components/Spinner';
+import {
+  Spinner,
+  Heading,
+  SimpleGrid,
+  Divider,
+  Input,
+  Box,
+  Text,
+} from '@chakra-ui/react';
 import Wrapper from '../components/Wrapper';
-import { useRouter } from 'next/router';
 
 const dashboard: FC = () => {
-  const { data, loading, error } = useAuthenticatedUserQuery();
-  const router = useRouter();
+  const { data, loading } = useAuthenticatedUserQuery();
+
   if (!loading && !data) {
     return <h1>Something went wrong!</h1>;
   }
 
-  useEffect(() => {
-    if (!data.authenticatedUser) {
-      router.push('/');
-    }
-  }, [loading, error]);
-
   return (
     <Wrapper>
-      <section className="px-4 sm:px-6 lg:px-4 xl:px-6 pt-4 pb-4 sm:pb-6 lg:pb-4 xl:pb-6 space-y-4 w-4/6 m-auto">
-        <header className="flex items-center justify-between">
-          <h2 className="text-lg leading-6 font-medium text-black">
-            Your Projects
-          </h2>
-        </header>
-        <form className="relative">
-          <svg
-            width="20"
-            height="20"
-            fill="currentColor"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-            />
-          </svg>
-          <input
-            className="focus:border-light-blue-500 focus:ring-1 focus:ring-light-blue-500 focus:outline-none w-full text-sm text-black placeholder-gray-500 border border-gray-200 rounded-md py-2 pl-10"
-            type="text"
-            aria-label="Filter projects"
-            placeholder="Filter projects"
-          />
-        </form>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-          {loading ? (
-            <Spinner />
-          ) : (
+      <Box py="8" px="32">
+        <Heading>Your Projects</Heading>
+        <Divider my="8" />
+        <Input />
+
+        <SimpleGrid py="8" px="32" columns={3} spacing={10}>
+          {data?.authenticatedUser ? (
             data.authenticatedUser.projects.map((project) =>
               !project ? null : (
-                <li key={project._id}>
-                  <ProjectCard
-                    description={project.projectDescription}
-                    id={project._id}
-                    name={project.projectName}
-                  />
-                </li>
+                <ProjectCard
+                  description={project.projectDescription}
+                  id={project._id}
+                  name={project.projectName}
+                />
               )
             )
+          ) : (
+            <Spinner />
           )}
           <Link href="/new">
-            <li className="hover:shadow-lg flex rounded-lg cursor-pointer">
-              <span className="hover:border-transparent hover:shadow-xs w-full hover:bg-blue-100 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm font-medium py-4">
-                New Project
-              </span>
-            </li>
+            <Box
+              _hover={{
+                borderColor: 'transparent',
+                background: 'gray.900',
+                shadow: 'xl',
+              }}
+              cursor="pointer"
+              rounded="lg"
+              p="4"
+              borderWidth="medium"
+              borderColor="gray.200"
+              borderStyle="dashed"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Text fontWeight="bold">New Project</Text>
+            </Box>
           </Link>
-        </ul>
-      </section>
+        </SimpleGrid>
+      </Box>
     </Wrapper>
   );
 };
