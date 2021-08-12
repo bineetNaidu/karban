@@ -1,6 +1,9 @@
 import Head from 'next/head';
-import { ChakraProvider } from '@chakra-ui/react';
-import 'tailwindcss/tailwind.css';
+import {
+  ChakraProvider,
+  ColorModeProvider,
+  ColorModeScript,
+} from '@chakra-ui/react';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -10,6 +13,10 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <main>
         <ChakraProvider resetCSS>
+          <ColorModeScript initialColorMode="dark" />
+          <ColorModeProvider
+            options={{ initialColorMode: 'dark' }}
+          ></ColorModeProvider>
           <Component {...pageProps} />
         </ChakraProvider>
       </main>
