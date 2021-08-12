@@ -19,6 +19,7 @@ import {
   MenuDivider,
   useColorModeValue,
   Spinner,
+  Heading,
 } from '@chakra-ui/react';
 import LoadingOverlay from './LoadingOverlay';
 
@@ -64,7 +65,7 @@ const Navbar: FC = () => {
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} as="nav">
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
+            <Heading>Karban</Heading>
           </HStack>
           <Flex alignItems={'center'}>
             {data?.authenticatedUser ? (
