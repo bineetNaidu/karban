@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { ChakraProvider } from '@chakra-ui/react';
 import 'tailwindcss/tailwind.css';
 
 function MyApp({ Component, pageProps }) {
@@ -8,7 +9,9 @@ function MyApp({ Component, pageProps }) {
         <title>Karban | bineetnaidu.io</title>
       </Head>
       <main>
-        <Component {...pageProps} />
+        <ChakraProvider resetCSS>
+          <Component {...pageProps} />
+        </ChakraProvider>
       </main>
     </>
   );

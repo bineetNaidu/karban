@@ -1,129 +1,134 @@
 import { useState } from 'react';
 import { withApollo } from '../lib/withApollo';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Link,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+  useToast,
+} from '@chakra-ui/react';
 import { useLoginMutation } from '../generated/graphql';
+import useForm from '../hooks/useForm';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, handleUsername, resetUsername] = useForm('');
+  const [password, handlePassword, resetPassword] = useForm('');
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const [login] = useLoginMutation();
   const r = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { errors } = await login({
-      variables: {
-        username,
-        password,
-      },
-    });
-    if (errors) {
-      return;
+    try {
+      e.preventDefault();
+      setLoading(true);
+      const { errors } = await login({
+        variables: {
+          username,
+          password,
+        },
+      });
+      if (errors) {
+        throw errors;
+      }
+      resetUsername();
+      resetPassword();
+      toast({
+        title: 'Successfully Logged you in',
+        duration: 5000,
+        position: 'top-right',
+        isClosable: true,
+        status: 'success',
+      });
+      r.push((r.query.redirectUrl as string) || '/dashboard');
+    } catch (err) {
+      toast({
+        title: 'Error',
+        duration: 5000,
+        position: 'top-right',
+        isClosable: true,
+        status: 'error',
+        description: err.message,
+      });
     }
-    setUsername('');
-    setPassword('');
-    r.push('/dashboard');
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-          />
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link href="/register">
-              <span className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer hover:underline">
-                register a new Account!
-              </span>
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <input type="hidden" name="remember" defaultValue="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                required
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.50', 'gray.800')}
+    >
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            to enjoy all of our cool <Link color={'blue.400'}>features</Link> ✌️
+          </Text>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}
+          as="form"
+          onSubmit={handleSubmit}
+        >
+          <Stack spacing={4}>
+            <FormControl id="username">
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
+                onChange={handleUsername}
               />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                onChange={handlePassword}
               />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
+            </FormControl>
+            <Stack spacing={10}>
+              <Stack
+                direction={{ base: 'column', sm: 'row' }}
+                align={'start'}
+                justify={'space-between'}
               >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                <NextLink href="/register">
+                  <Link color={'blue.400'}>Need a account?</Link>
+                </NextLink>
+                <Link color={'blue.400'}>Forgot password?</Link>
+              </Stack>
+              <Button
+                type="submit"
+                bg={'blue.400'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.500',
+                }}
+                isLoading={loading}
               >
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                {/* <LockClosedIcon
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  aria-hidden="true"
-                /> */}
-              </span>
-              Sign in
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+                Sign in
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 };
 

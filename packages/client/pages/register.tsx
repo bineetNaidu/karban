@@ -1,130 +1,192 @@
 import { useState } from 'react';
 import { withApollo } from '../lib/withApollo';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useRegisterMutation } from '../generated/graphql';
+import {
+  Box,
+  Stack,
+  Heading,
+  Text,
+  Container,
+  Input,
+  Button,
+  useBreakpointValue,
+  IconProps,
+  Icon,
+  Link,
+  useToast,
+} from '@chakra-ui/react';
+import useForm from '../hooks/useForm';
+
+const Blur = (props: IconProps) => {
+  return (
+    <Icon
+      width={useBreakpointValue({ base: '100%', md: '40vw', lg: '30vw' })}
+      zIndex={useBreakpointValue({ base: -1, md: -1, lg: 0 })}
+      height="560px"
+      viewBox="0 0 528 560"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx="71" cy="61" r="111" fill="#F56565" />
+      <circle cx="244" cy="106" r="139" fill="#ED64A6" />
+      <circle cy="291" r="139" fill="#ED64A6" />
+      <circle cx="80.5" cy="189.5" r="101.5" fill="#ED8936" />
+      <circle cx="196.5" cy="317.5" r="101.5" fill="#ECC94B" />
+      <circle cx="70.5" cy="458.5" r="101.5" fill="#48BB78" />
+      <circle cx="426.5" cy="-0.5" r="101.5" fill="#4299E1" />
+    </Icon>
+  );
+};
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [avatar, setAvatar] = useState('');
+  const [username, handleUsername, resetUsername] = useForm('');
+  const [password, handlePassword, resetPassword] = useForm('');
+  const [avatar, handleAvatar, resetAvatar] = useForm('');
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const [register] = useRegisterMutation();
   const r = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { errors } = await register({
-      variables: {
-        username,
-        password,
-        avatar,
-      },
-    });
-    if (errors) {
-      return;
+    try {
+      setLoading(true);
+      const { errors } = await register({
+        variables: {
+          username,
+          password,
+          avatar,
+        },
+      });
+      if (errors) {
+        return;
+      }
+      resetUsername();
+      resetPassword();
+      resetAvatar();
+      toast({
+        title: 'Successfully registered an account!',
+        duration: 5000,
+        position: 'top-right',
+        isClosable: true,
+        status: 'success',
+      });
+      r.push('/dashboard');
+    } catch (err) {
+      toast({
+        title: 'Error',
+        duration: 5000,
+        position: 'top-right',
+        isClosable: true,
+        status: 'error',
+        description: err.message,
+      });
     }
-    setUsername('');
-    setPassword('');
-    setAvatar('');
-    r.push('/dashboard');
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-          />
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Regster your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link href="/register">
-              <span className="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer hover:underline">
-                login to your account!
-              </span>
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <input type="hidden" name="remember" defaultValue="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-              />
-            </div>
-            <div>
-              <label htmlFor="avatar" className="sr-only">
-                Avatar
-              </label>
-              <input
-                id="avatar"
-                required
-                value={avatar}
-                onChange={(e) => setAvatar(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Avatar"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    <Box position={'relative'}>
+      <Container maxW={'7xl'} py={{ base: 10, sm: 20, lg: 32 }}>
+        <Stack
+          bg={'gray.50'}
+          rounded={'xl'}
+          p={{ base: 4, sm: 6, md: 8 }}
+          spacing={{ base: 8 }}
+          maxW={{ lg: 'lg' }}
+          margin="auto"
+        >
+          <Stack spacing={4}>
+            <Heading
+              color={'gray.800'}
+              lineHeight={1.1}
+              fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}
             >
-              Register
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+              Register a new account
+              <Text
+                as={'span'}
+                bgGradient="linear(to-r, red.400,pink.400)"
+                bgClip="text"
+              >
+                !
+              </Text>
+            </Heading>
+            <Text color={'gray.500'} fontSize={{ base: 'sm', sm: 'md' }}>
+              We’re looking for amazing engineers just like you! Become a part
+              of our rockstar engineering team and skyrocket your career!
+            </Text>
+          </Stack>
+          <Box as={'form'} mt={10} onSubmit={handleSubmit}>
+            <Stack spacing={4}>
+              <Input
+                placeholder="Username"
+                value={username}
+                onChange={handleUsername}
+                bg={'gray.100'}
+                border={0}
+                color={'gray.500'}
+                _placeholder={{
+                  color: 'gray.500',
+                }}
+              />
+              <Input
+                placeholder="Password"
+                value={password}
+                onChange={handlePassword}
+                type="password"
+                bg={'gray.100'}
+                border={0}
+                color={'gray.500'}
+                _placeholder={{
+                  color: 'gray.500',
+                }}
+              />
+              <Input
+                value={avatar}
+                onChange={handleAvatar}
+                placeholder="Avatar URL"
+                bg={'gray.100'}
+                border={0}
+                color={'gray.500'}
+                _placeholder={{
+                  color: 'gray.500',
+                }}
+              />
+            </Stack>
+            <Button
+              fontFamily={'heading'}
+              type="submit"
+              mt={8}
+              w={'full'}
+              bgGradient="linear(to-r, red.400,pink.400)"
+              color={'white'}
+              _hover={{
+                bgGradient: 'linear(to-r, red.400,pink.400)',
+                boxShadow: 'xl',
+              }}
+              isLoading={loading}
+            >
+              Submit
+            </Button>
+            <NextLink href="/login">
+              <Link color="blue.800" textAlign="center" mt="5">
+                Already have an Account!
+              </Link>
+            </NextLink>
+          </Box>
+          form
+        </Stack>
+      </Container>
+      <Blur
+        position={'absolute'}
+        top={-10}
+        left={-10}
+        style={{ filter: 'blur(70px)' }}
+      />
+    </Box>
   );
 };
 

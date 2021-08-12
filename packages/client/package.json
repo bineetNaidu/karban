@@ -10,6 +10,11 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.18",
+    "@chakra-ui/icons": "^1.0.15",
+    "@chakra-ui/react": "^1.6.6",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "framer-motion": "^4.1.17",
     "graphql": "^15.5.0",
     "next": "^10.2.0",
     "next-apollo": "^5.0.4",
@@ -23,9 +28,6 @@
     "@graphql-codegen/typescript-react-apollo": "2.2.5",
     "@types/node": "^14.14.25",
     "@types/react": "^17.0.1",
-    "autoprefixer": "^10.2.4",
-    "postcss": "^8.2.5",
-    "tailwindcss": "^2.0.2",
     "typescript": "^4.1.3"
   }
 }
