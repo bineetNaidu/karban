@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useCreateCardMutation } from '../generated/graphql';
 import useForm from '../hooks/useForm';
 import useToggle from '../hooks/useToggle';
+import { Flex, Text, Button, Textarea } from '@chakra-ui/react';
 
 interface Props {
   projectId: string;
@@ -28,41 +29,69 @@ const CreateCard: FC<Props> = ({ projectId }) => {
   };
 
   return (
-    <div className="hover:shadow-lg flex rounded-lg cursor-pointer">
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      flexDirection="column"
+      px="4"
+      py="2"
+      border="2px"
+      minH="20"
+      m="1"
+      borderColor="blue.100"
+      borderStyle="dashed"
+      position="relative"
+      rounded="md"
+      shadow="md"
+      _hover={{
+        borderColor: 'transparent',
+        background: 'gray.900',
+        shadow: 'xl',
+      }}
+      cursor="pointer"
+    >
       {showInput ? (
         <form
           onSubmit={handleSubmit}
-          className="flex items-center flex-col justify-center rounded-lg border-2 border-blue-200 text-sm font-medium py-4 w-full z-50"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <h2 className="mb-2 text-base">Card Body</h2>
-          <textarea
-            className=" outline-black"
-            value={body}
-            onChange={handleBody}
-          ></textarea>
-          <button
+          <Text mb="2" fontSize="md">
+            Card Body
+          </Text>
+          <Textarea value={body} onChange={handleBody}></Textarea>
+          <Button
             type="submit"
-            className="bg-green-500 text-white w-10/12 mt-2 rounded py-1"
+            colorScheme="green"
+            mt="2"
+            rounded="md"
+            py="1"
+            w="full"
           >
             Add
-          </button>
-          <button
+          </Button>
+          <Button
             type="reset"
             onClick={toggleView}
-            className="bg-red-500 text-white w-10/12 mt-2 rounded py-1"
+            colorScheme="red"
+            mt="2"
+            rounded="md"
+            w="full"
+            py="1"
           >
             Cancel
-          </button>
+          </Button>
         </form>
       ) : (
-        <span
-          className="hover:border-transparent hover:shadow-xs w-full h-full m-1 flex items-center justify-center rounded-lg border-2 border-dashed border-blue-200 text-sm font-medium py-4"
-          onClick={toggleView}
-        >
+        <Text fontWeight="bold" onClick={toggleView}>
           Add Card
-        </span>
+        </Text>
       )}
-    </div>
+    </Flex>
   );
 };
 

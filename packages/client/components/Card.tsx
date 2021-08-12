@@ -6,6 +6,8 @@ import {
 } from '../generated/graphql';
 import useForm from '../hooks/useForm';
 import useToggle from '../hooks/useToggle';
+import { Box, Text, Button, IconButton, Textarea } from '@chakra-ui/react';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 interface Props {
   card: ICard;
@@ -35,45 +37,85 @@ export const Card: FC<Props> = ({ card, projectId }) => {
   };
 
   return (
-    <div className="px-4 py-2 border-2 border-blue-200 h-20 m-1 border-dashed relative group rounded shadow">
+    <Box
+      px="4"
+      py="2"
+      border="2px"
+      minH="20"
+      m="1"
+      borderColor="blue.100"
+      borderStyle="dashed"
+      position="relative"
+      rounded="md"
+      shadow="md"
+      role="group"
+    >
       {updateMode ? (
         <form
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
           onSubmit={handleSubmit}
-          className="flex items-center flex-col justify-center rounded-lg border-2 border-blue-200 text-sm font-medium py-4 z-50"
         >
-          <h2 className="mb-2 text-base">Edit Card Body</h2>
-          <textarea
-            className="mx-5 outline-black"
-            value={body}
-            onChange={handleBody}
-          ></textarea>
-          <button
+          <Text mb="2" fontSize="md">
+            Edit Card Body
+          </Text>
+          <Textarea value={body} onChange={handleBody}></Textarea>
+          <Button
             type="submit"
-            className="bg-green-500 text-white w-10/12 mt-2 rounded py-1"
+            colorScheme="green"
+            mt="2"
+            rounded="md"
+            py="1"
+            w="full"
           >
             Update!
-          </button>
-          <button
+          </Button>
+          <Button
             type="reset"
             onClick={toggleUpdateMode}
-            className="bg-red-500 text-white w-10/12 mt-2 rounded py-1"
+            colorScheme="red"
+            mt="2"
+            rounded="md"
+            w="full"
+            py="1"
           >
             Cancel
-          </button>
+          </Button>
         </form>
       ) : (
         <>
-          <p>{card.body}</p>
+          <Text>{card.body}</Text>
 
-          <div className="absolute top-0 right-0">
-            <button
-              className="bg-green-600 text-white px-2 py-1 right-0 font-light text-xs opacity-0 group-hover:opacity-100 transition-all mr-1"
+          <Box
+            position="absolute"
+            top="2"
+            right="0"
+            opacity="0"
+            display="none"
+            _groupHover={{
+              opacity: '1',
+              display: 'block',
+            }}
+          >
+            <IconButton
+              aria-label="edit button"
+              px="2"
+              size="sm"
+              mr="1"
               onClick={toggleUpdateMode}
+              right="0"
             >
-              <img src="/edit.svg" alt="" className="text-white h-5" />
-            </button>
-            <button
-              className="bg-red-600 text-white px-2 py-1 right-0 font-light text-xs opacity-0 group-hover:opacity-100 transition-all"
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              aria-label="delete button"
+              px="2"
+              size="sm"
+              mr="1"
+              right="0"
               onClick={async () => {
                 await deleteCard({
                   variables: {
@@ -86,11 +128,11 @@ export const Card: FC<Props> = ({ card, projectId }) => {
                 });
               }}
             >
-              <img src="/trash.svg" alt="" className="text-white h-5" />
-            </button>
-          </div>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 };
