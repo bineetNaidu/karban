@@ -8,7 +8,8 @@ import {
   DrawerBody,
   Input,
   DrawerFooter,
-	Text,
+  Text,
+  useToast,
 } from '@chakra-ui/react';
 import { FC, useEffect } from 'react';
 import {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 const EditDrawer: FC<Props> = ({ isOpen, onClose, projectId }) => {
+  const toast = useToast();
   const [projectName, handleProjectname, resetName, setName] = useForm('');
   const [projectDescription, handleProjectDesc, resetDesc, setDesc] =
     useForm('');
@@ -38,7 +40,7 @@ const EditDrawer: FC<Props> = ({ isOpen, onClose, projectId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await updateProject({
+    const { data } = await updateProject({
       variables: {
         id: projectId,
         projectDescription,
@@ -49,6 +51,14 @@ const EditDrawer: FC<Props> = ({ isOpen, onClose, projectId }) => {
           id: 'Project:' + projectId,
         });
       },
+    });
+
+    toast({
+      title: `${data.updateProject.projectName} updated!`,
+      duration: 5000,
+      isClosable: true,
+      status: 'success',
+      position: 'top-right',
     });
 
     resetName();

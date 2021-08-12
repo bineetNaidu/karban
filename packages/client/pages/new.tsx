@@ -40,6 +40,7 @@ const NewProjectPage = () => {
           status: 'error',
           duration: 3000,
           isClosable: true,
+          position: 'top-right',
         });
         return;
       }
@@ -50,6 +51,7 @@ const NewProjectPage = () => {
           status: 'success',
           duration: 3000,
           isClosable: true,
+          position: 'top-right',
         });
         router.push('/dashboard');
       }
@@ -74,7 +76,6 @@ const NewProjectPage = () => {
             <FormLabel>Project Name</FormLabel>
             <Input
               type="text"
-              name="projectName"
               value={projectName}
               onChange={handleProjectname}
             />

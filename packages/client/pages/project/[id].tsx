@@ -44,11 +44,13 @@ const Project = () => {
 
   return (
     <Wrapper>
-      <EditDrawer
-        isOpen={isOpen}
-        onClose={onClose}
-        projectId={data.getProjectById._id}
-      />
+      {data.getProjectById?._id ? (
+        <EditDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          projectId={data.getProjectById._id}
+        />
+      ) : null}
       <Box px={['6', '12', '20', '28']} py="6" m="auto">
         <Flex alignItems="center">
           <Heading fontWeight="bold" textTransform="uppercase" flex="1" py="5">
