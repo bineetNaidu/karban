@@ -30,15 +30,15 @@ app.use(
   expressSession({
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
-      touchAfter: 60 * 60 * 24 * 7, // 1 week
     }),
     secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
     name: 'KarbanSess',
     cookie: {
-      maxAge: 60 * 60 * 24, // 1 day
-      sameSite: false,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // ? 1 week
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     },
