@@ -4,6 +4,10 @@
 
 Karban is project management board. Made with React + Nextjs + Typescript + Nodejs + Expressjs + MongoDB + GraphQL + 💙💚.
 
+## IMPORTANT NOTE
+
+`packages/api` is currently under-construction and the development of this api is __PAUSED__ for near future.
+
 ## Installation
 
 Use the package manager [npm](https://npmjs.org/) to install dependecies for Karban.
